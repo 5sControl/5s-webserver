@@ -1,0 +1,5 @@
+https://jsfiddle.net/0fghman1/2/
+echo token | go run main.go
+./rtsp-simple-server
+ffmpeg -protocol_whitelist file,udp,rtp -i rtp-forwarder.sdp -max_muxing_queue_size 1024 -f rtsp -rtsp_transport udp rtsp://localhost:8554/mystream
+python detect_or_track.py --weights yolov7.pt --source rtsp://localhost:8554/mystream --track --view-img --device cpu --show-fps --nosave
