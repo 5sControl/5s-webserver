@@ -4,7 +4,7 @@ services:
     restart: always
     image: artsiom24091/tracker_and_sender:latest
     build: .
-    container_name: tracker_and_sender
+    container_name: tracker_and_sender_314_exit
     ports:
       - "3011:3011"
     depends_on:
@@ -19,7 +19,7 @@ services:
     restart: always
     image: artsiom24091/tracker_and_sender:latest
     build: .
-    container_name: tracker_and_sender
+    container_name: tracker_and_sender_314_entrance
     ports:
       - "3010:3010"
     depends_on:
