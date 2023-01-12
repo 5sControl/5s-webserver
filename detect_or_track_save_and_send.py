@@ -28,8 +28,8 @@ dataArtem = pickle.loads(open("faces/Artem_encodings.pickle", "rb").read())
 dataRasul = pickle.loads(open("faces/Rasul_encodings.pickle", "rb").read())
 dataDima = pickle.loads(open("faces/Dima_encodings.pickle", "rb").read())
 artem = dataArtem["encodings"][0]
-dima = dataDima["encodings"][0]
-rasul = dataRasul["encodings"][0]
+dima = dataDima
+rasul = dataRasul
 known_face_encodings = [
     artem,
     dima,
@@ -48,14 +48,14 @@ def detect_person_in_video(image):
     encodings = face_recognition.face_encodings(rframe, locations)
     face_names = []
     for face_encoding in encodings:
-        matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+        matches = face_recognition.face_distance(known_face_encodings, face_encoding)
         name = "Unknown"
-
-        if True in matches:
-            first_match_index = matches.index(True)
-            name = known_face_names[first_match_index]
+        print(matches, 'matches')
+        best_match_index = np.argmin(matches)
+        if matches[best_match_index]:
+            name = known_face_names[best_match_index]
             face_names.append(name)
-
+    print(face_names, 'face_names')
     return face_names
 
 
@@ -84,8 +84,7 @@ def draw_boxes(img, bbox, identities=None, categories=None, confidences=None, na
     return img
 
 
-detected_person_names = ['Unknown'] * 10
-
+detected_person_names = ['Unknown'] * 1000000
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
@@ -228,6 +227,7 @@ def detect(save_img=False):
                                 threshold = 750
                                 isSavePhoto = False
                                 isExit = True
+                                print(t, 't')
                                 currentPerson = detected_person_names[t]
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) < threshold and int(
                                         track.centroidarr[0][1]) > threshold:
