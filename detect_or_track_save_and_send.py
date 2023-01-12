@@ -29,31 +29,30 @@ cameraType = os.environ['CAMERA_TYPE']
 dataset_names = []
 dataset = os.walk("dataset")
 known_face_encodings = []
-for i, data in enumerate(dataset):
-    if i == 2:
-        dataset_names = data
-        for dataset_name in data:
-            loaded_dataset = pickle.loads(open("dataset/" + dataset_name, "rb").read())
-            known_face_encodings.append(loaded_dataset)
+for data in dataset:
+    dataset_names = data[2]
+    for dataset_name in data[2]:
+        loaded_dataset = pickle.loads(open("dataset/" + dataset_name, "rb").read())
+        known_face_encodings.append(loaded_dataset)
+print(dataset_names, 'dataset_names')
 
 
 def detect_person_in_video(image):
     rframe = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
     locations = face_recognition.face_locations(rframe)
     encodings = face_recognition.face_encodings(rframe, locations)
-    dataset_names = []
+    datasets_names = []
     for face_encoding in encodings:
         matches = face_recognition.face_distance(known_face_encodings, face_encoding)
         name = "Unknown"
         print(matches, 'matches')
         if len(matches):
             best_match_index = np.argmin(matches)
-            if matches[best_match_index]:
+            if matches[best_match_index] and matches[best_match_index] < 0.6:
                 name = dataset_names[best_match_index]
-                dataset_names.append(name)
+                datasets_names.append(name)
 
-    # print(dataset_names, 'dataset_names')
-    return dataset_names
+    return datasets_names
 
 detected_dataset_names = ['Unknown'] * 1000000
 
@@ -114,7 +113,7 @@ def detect(save_img=False):
     startTime = 0
     ###################################
     for path, img, im0s, vid_cap in dataset:
-        frames += 1
+        # frames += 1
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -194,16 +193,14 @@ def detect(save_img=False):
                                 isSavePhoto = False
                                 isExit = True
                                 # print(t, 't')
-                                currentDatasetName= detected_dataset_names[t]
+                                currentDatasetName = detected_dataset_names[t]
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) < threshold and int(
                                         track.centroidarr[0][1]) > threshold:
                                     del tracks[t]
                                     detected_dataset_names[t] = 'Unknown'
                                     if cameraType == 'entrance':
-                                        people -= 1
                                         action = 'exit'
                                     else:
-                                        people += 1
                                         action = 'entrance'
                                     isSavePhoto = True
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) > threshold and int(
@@ -211,23 +208,21 @@ def detect(save_img=False):
                                     del tracks[t]
                                     detected_dataset_names[t] = 'Unknown'
                                     if cameraType == 'entrance':
-                                        people += 1
                                         action = 'entrance'
                                     else:
-                                        people -= 1
                                         action = 'exit'
                                     isSavePhoto = True
-                                if isSavePhoto:
+                                if isSavePhoto and action == cameraType:
                                     photoName = str(uuid.uuid4())
                                     save_photo_url = save_photo_dir + photoName + '.jpg'
                                     cv2.imwrite(save_photo_url, im0)
                                     data = {'image': save_photo_url, 'action': action, 'camera': ip[0],'name_file': currentDatasetName}
                                     print(data, 'data')
-                                    date_now = datetime.today()
-                                    nowSeconds = date_now.timestamp()
-                                    difference = nowSeconds - startTimeSeconds
-
-                                    print(frames / difference, 'fps')
+                                    # date_now = datetime.today()
+                                    # nowSeconds = date_now.timestamp()
+                                    # difference = nowSeconds - startTimeSeconds
+                                    #
+                                    # print(frames / difference, 'fps')
                                     # r = requests.post(url = 'http://django:8000/api/employees/history/', json = data)
                                     # res = r.json()
                                     # print(res, 'res')

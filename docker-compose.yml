@@ -49,4 +49,4 @@ services:
       DEBUG: "True"
     volumes:
       - /home/server/reps/images:/usr/src/app/images
-      - /home/server/reps/database/dataset:/usr/src/app/dataset
+      - /home/server/reps/database:/usr/src/app/database
