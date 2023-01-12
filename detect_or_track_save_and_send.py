@@ -25,7 +25,6 @@ from sort import *
 from datetime import datetime
 cameraUrl = os.environ['CAMERA_URL']
 cameraType = os.environ['CAMERA_TYPE']
-print(cameraUrl, 'cameraUrl')
 
 dataset_names = []
 dataset = os.walk("dataset")
@@ -53,7 +52,7 @@ def detect_person_in_video(image):
                 name = dataset_names[best_match_index]
                 dataset_names.append(name)
 
-    print(dataset_names, 'dataset_names')
+    # print(dataset_names, 'dataset_names')
     return dataset_names
 
 detected_dataset_names = ['Unknown'] * 1000000
@@ -194,7 +193,7 @@ def detect(save_img=False):
                                 threshold = 750
                                 isSavePhoto = False
                                 isExit = True
-                                print(t, 't')
+                                # print(t, 't')
                                 currentDatasetName= detected_dataset_names[t]
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) < threshold and int(
                                         track.centroidarr[0][1]) > threshold:
