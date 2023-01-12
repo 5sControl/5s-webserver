@@ -1,0 +1,52 @@
+version: '3'
+services:
+  tracker_and_sender_314_exit:
+    restart: always
+    image: artsiom24091/tracker_and_sender:latest
+    build: .
+    container_name: tracker_and_sender
+    ports:
+      - "3011:3011"
+    depends_on:
+      - django
+    environment:
+      CAMERA_URL: 'rtsp://admin:just4Taqtile@192.168.1.160/h264_stream'
+      CAMERA_TYPE: 'entrance'
+    volumes:
+      -  /home/server/reps/images:/var/www/5scontrol/images
+      -  /home/server/reps/dataset:/var/www/5scontrol/dataset
+  tracker_and_sender_314_entrance:
+    restart: always
+    image: artsiom24091/tracker_and_sender:latest
+    build: .
+    container_name: tracker_and_sender
+    ports:
+      - "3010:3010"
+    depends_on:
+      - django
+    environment:
+      CAMERA_URL: 'rtsp://admin:just4Taqtile@192.168.1.161/Streaming/Channels/1'
+      CAMERA_TYPE: 'entrance'
+    volumes:
+      - /home/server/reps/images:/var/www/5scontrol/images
+      - /home/server/reps/dataset:/var/www/5scontrol/dataset
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+  django:
+    restart: always
+    image: artsiom24091/django:latest
+    build: .
+    container_name: django
+    ports:
+      - "80:8000"
+    environment:
+      SECRET_KEY: "django-insecure-osfh^r%nvpun6ek2z4n!f*&r@$g+*d8n#8z0ac9_%)%api0x)7"
+      DEBUG: "True"
+    volumes:
+      - /home/server/reps/images:/usr/src/app/images
+      - /home/server/reps/dataset:/usr/src/app/dataset

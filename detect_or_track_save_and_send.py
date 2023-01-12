@@ -22,75 +22,49 @@ from utils.torch_utils import select_device, load_classifier, time_synchronized,
 
 from sort import *
 
-import datetime
+from datetime import datetime
+cameraUrl = os.environ['CAMERA_URL']
+cameraType = os.environ['CAMERA_TYPE']
+print(cameraUrl, 'cameraUrl')
 
-dataArtem = pickle.loads(open("faces/Artem_encodings.pickle", "rb").read())
-dataRasul = pickle.loads(open("faces/Rasul_encodings.pickle", "rb").read())
-dataDima = pickle.loads(open("faces/Dima_encodings.pickle", "rb").read())
-artem = dataArtem["encodings"][0]
-dima = dataDima
-rasul = dataRasul
-known_face_encodings = [
-    artem,
-    dima,
-    rasul
-]
-known_face_names = [
-    "Artem Zhuchkou",
-    "Dmitry Anikeenko",
-    "Rasul Makhmudov"
-]
+dataset_names = []
+dataset = os.walk("dataset")
+known_face_encodings = []
+for i, data in enumerate(dataset):
+    if i == 2:
+        dataset_names = data
+        for dataset_name in data:
+            loaded_dataset = pickle.loads(open("dataset/" + dataset_name, "rb").read())
+            known_face_encodings.append(loaded_dataset)
 
 
 def detect_person_in_video(image):
     rframe = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
     locations = face_recognition.face_locations(rframe)
     encodings = face_recognition.face_encodings(rframe, locations)
-    face_names = []
+    dataset_names = []
     for face_encoding in encodings:
         matches = face_recognition.face_distance(known_face_encodings, face_encoding)
         name = "Unknown"
         print(matches, 'matches')
         best_match_index = np.argmin(matches)
         if matches[best_match_index]:
-            name = known_face_names[best_match_index]
-            face_names.append(name)
-    print(face_names, 'face_names')
-    return face_names
+            name = dataset_names[best_match_index]
+            dataset_names.append(name)
+    print(dataset_names, 'dataset_names')
+    return dataset_names
 
-
-def draw_boxes(img, bbox, identities=None, categories=None, confidences=None, names=None, colors=None):
-    for i, box in enumerate(bbox):
-        x1, y1, x2, y2 = [int(i) for i in box]
-        tl = opt.thickness or round(0.002 * (img.shape[0] + img.shape[1]) / 2) + 1  # line/font thickness
-
-        cat = int(categories[i]) if categories is not None else 0
-        id = int(identities[i]) if identities is not None else 0
-        # conf = confidences[i] if confidences is not None else 0
-
-        color = colors[cat]
-
-        # if not opt.nobbox:
-        #     cv2.rectangle(img, (x1, y1), (x2, y2), color, tl)
-
-        # if not opt.nolabel:
-        #     label = str(id) + ":" + names[cat] if identities is not None else f'{names[cat]} {confidences[i]:.2f}'
-        #     tf = max(tl - 1, 1)  # font thickness
-        #     t_size = cv2.getTextSize(label, 0, fontScale=tl / 3, thickness=tf)[0]
-        #     c2 = x1 + t_size[0], y1 - t_size[1] - 3
-        #     cv2.rectangle(img, (x1, y1), c2, color, -1, cv2.LINE_AA)  # filled
-        #     cv2.putText(img, label, (x1, y1 - 2), 0, tl / 3, [225, 255, 255], thickness=tf, lineType=cv2.LINE_AA)
-
-    return img
-
-
-detected_person_names = ['Unknown'] * 1000000
+detected_dataset_names = ['Unknown'] * 1000000
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
     save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
+    source = cameraUrl
+    frames = 0
+    startTime = datetime.today()
+    startTimeSeconds = startTime.timestamp()
     save_dir = Path(increment_path(Path(opt.project) / opt.name, exist_ok=opt.exist_ok))  # increment run
     if not opt.nosave:
         (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
@@ -122,14 +96,8 @@ def detect(save_img=False):
         modelc = load_classifier(name='resnet101', n=2)  # initialize
         modelc.load_state_dict(torch.load('weights/resnet101.pt', map_location=device)['model']).to(device).eval()
 
-    # Set Dataloader
-    vid_path, vid_writer = None, None
-    if webcam:
-        view_img = check_imshow()
-        cudnn.benchmark = True  # set True to speed up constant image size inference
-        dataset = LoadStreams(source, img_size=imgsz, stride=stride)
-    else:
-        dataset = LoadImages(source, img_size=imgsz, stride=stride)
+    cudnn.benchmark = True  # set True to speed up constant image size inference
+    dataset = LoadStreams(source, img_size=imgsz, stride=stride)
 
     # Get names and colors
     names = model.module.names if hasattr(model, 'module') else model.names
@@ -146,6 +114,7 @@ def detect(save_img=False):
     startTime = 0
     ###################################
     for path, img, im0s, vid_cap in dataset:
+        frames += 1
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -176,10 +145,7 @@ def detect(save_img=False):
 
         # Process detections
         for i, det in enumerate(pred):  # detections per image
-            if webcam:  # batch_size >= 1
-                p, s, im0, frame = path[i], '%g: ' % i, im0s[i].copy(), dataset.count
-            else:
-                p, s, im0, frame = path, '', im0s, getattr(dataset, 'frame', 0)
+            p, s, im0, frame = path[i], '%g: ' % i, im0s[i].copy(), dataset.count
 
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # img.jpg
@@ -213,10 +179,10 @@ def detect(save_img=False):
                         categories = tracked_dets[:, 4]
                         confidences = None
 
-                        f_names = detect_person_in_video(im0)
-                        for i, name in enumerate(f_names):
-                            if detected_person_names[i] == 'Unknown':
-                                detected_person_names[i] = name
+                        dataset_recognised_names = detect_person_in_video(im0)
+                        for i, name in enumerate(dataset_recognised_names):
+                            if detected_dataset_names[i] == 'Unknown':
+                                detected_dataset_names[i] = name
 
                         if opt.show_track:
                             # loop over tracks
@@ -228,50 +194,44 @@ def detect(save_img=False):
                                 isSavePhoto = False
                                 isExit = True
                                 print(t, 't')
-                                currentPerson = detected_person_names[t]
+                                currentDatasetName= detected_dataset_names[t]
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) < threshold and int(
                                         track.centroidarr[0][1]) > threshold:
                                     del tracks[t]
-                                    detected_person_names[t] = 'Unknown'
-                                    people -= 1
+                                    detected_dataset_names[t] = 'Unknown'
+                                    if cameraType == 'entrance':
+                                        people -= 1
+                                        action = 'exit'
+                                    else:
+                                        people += 1
+                                        action = 'entrance'
                                     isSavePhoto = True
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) > threshold and int(
                                         track.centroidarr[0][1]) < threshold:
                                     del tracks[t]
-                                    detected_person_names[t] = 'Unknown'
-                                    people += 1
+                                    detected_dataset_names[t] = 'Unknown'
+                                    if cameraType == 'entrance':
+                                        people += 1
+                                        action = 'entrance'
+                                    else:
+                                        people -= 1
+                                        action = 'exit'
                                     isSavePhoto = True
-                                    isExit = False
                                 if isSavePhoto:
                                     photoName = str(uuid.uuid4())
                                     save_photo_url = save_photo_dir + photoName + '.jpg'
                                     cv2.imwrite(save_photo_url, im0)
-                                    action = 'entrance'
-                                    if isExit:
-                                        action = 'exit'
-                                    data = {'image': save_photo_url, 'action': action, 'camera': ip[0], 'name': currentPerson}
+                                    data = {'image': save_photo_url, 'action': action, 'camera': ip[0],'name_file': currentDatasetName}
                                     print(data, 'data')
+                                    date_now = datetime.today()
+                                    nowSeconds = date_now.timestamp()
+                                    difference = nowSeconds - startTimeSeconds
+
+                                    print(frames / difference, 'fps')
                                     # r = requests.post(url = 'http://django:8000/api/employees/history/', json = data)
                                     # res = r.json()
                                     # print(res, 'res')
 
-                                # cv2.line(im0, (0, threshold), (1820, threshold),track_color, thickness=opt.thickness)
-
-                                # print(track.centroidarr[i])
-                                # [cv2.line(im0, (int(track.centroidarr[i][0]),
-                                #                 int(track.centroidarr[i][1])),
-                                #           (int(track.centroidarr[i + 1][0]),
-                                #            int(track.centroidarr[i + 1][1])),
-                                #           track_color, thickness=opt.thickness)
-                                #  for i, _ in enumerate(track.centroidarr)
-                                #  if i < len(track.centroidarr) - 1]
-                else:
-                    bbox_xyxy = dets_to_sort[:, :4]
-                    identities = None
-                    categories = dets_to_sort[:, 5]
-                    confidences = dets_to_sort[:, 4]
-                # print(bbox_xyxy, 'bbox_xyxy')
-                im0 = draw_boxes(im0, bbox_xyxy, identities, categories, confidences, names, colors)
                 # cv2.imshow(str(p), im0)
                 # cv2.waitKey(1)
 
