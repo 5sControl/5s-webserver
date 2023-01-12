@@ -47,10 +47,12 @@ def detect_person_in_video(image):
         matches = face_recognition.face_distance(known_face_encodings, face_encoding)
         name = "Unknown"
         print(matches, 'matches')
-        best_match_index = np.argmin(matches)
-        if matches[best_match_index]:
-            name = dataset_names[best_match_index]
-            dataset_names.append(name)
+        if len(matches):
+            best_match_index = np.argmin(matches)
+            if matches[best_match_index]:
+                name = dataset_names[best_match_index]
+                dataset_names.append(name)
+
     print(dataset_names, 'dataset_names')
     return dataset_names
 
@@ -83,7 +85,6 @@ def detect(save_img=False):
     model = attempt_load(weights, map_location=device)  # load FP32 model
     stride = int(model.stride.max())  # model stride
     imgsz = check_img_size(imgsz, s=stride)  # check img_size
-
     if trace:
         model = TracedModel(model, device, opt.img_size)
 
