@@ -33,6 +33,7 @@ for data in dataset:
     dataset_names = data[2]
     for dataset_name in data[2]:
         loaded_dataset = pickle.loads(open("dataset/" + dataset_name, "rb").read())
+        print(dataset_name, 'dataset_name')
         known_face_encodings.append(loaded_dataset)
 print(dataset_names, 'dataset_names')
 
