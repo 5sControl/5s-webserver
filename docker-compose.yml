@@ -11,7 +11,7 @@ services:
       - django
     environment:
       CAMERA_URL: 'rtsp://admin:just4Taqtile@192.168.1.160/h264_stream'
-      CAMERA_TYPE: 'entrance'
+      CAMERA_TYPE: 'exit'
     volumes:
       -  /home/server/reps/images:/var/www/5scontrol/images
       -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
