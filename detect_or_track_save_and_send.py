@@ -42,20 +42,19 @@ def detect_person_in_video(image):
     rframe = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
     locations = face_recognition.face_locations(rframe)
     encodings = face_recognition.face_encodings(rframe, locations)
-    datasets_names = []
+    datasets_matches = []
     for face_encoding in encodings:
         matches = face_recognition.face_distance(known_face_encodings, face_encoding)
-        name = "unknown"
-        print(matches, 'matches')
-        if len(matches):
-            best_match_index = np.argmin(matches)
-            if matches[best_match_index] and matches[best_match_index] < 1:
-                name = dataset_names[best_match_index]
-                datasets_names.append(name)
+        datasets_matches.append(matches)
+        # if len(matches):
+        #     best_match_index = np.argmin(matches)
+        #     if matches[best_match_index] and matches[best_match_index] < 1:
+        #         name = dataset_names[best_match_index]
+        #         datasets_names.append(name)
+    print(datasets_matches, 'datasets_matches')
+    return datasets_matches
 
-    return datasets_names
-
-detected_dataset_names = ['unknown'] * 1000000
+detected_dataset_names = ['unknown'] * 30
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
@@ -179,26 +178,23 @@ def detect(save_img=False):
                         categories = tracked_dets[:, 4]
                         confidences = None
 
-                        dataset_recognised_names = detect_person_in_video(im0)
-                        for i, name in enumerate(dataset_recognised_names):
+                        dataset_recognised_matches = detect_person_in_video(im0)
+                        for i, matches in enumerate(dataset_recognised_matches):
                             if detected_dataset_names[i] == 'unknown':
-                                detected_dataset_names[i] = name
-
+                                detected_dataset_names[i] = [matches]
+                            else:
+                                detected_dataset_names[i].append(matches)
                         if opt.show_track:
                             # loop over tracks
                             for t, track in enumerate(tracks):
+                                print(len(tracks), 'len(tracks)')
                                 track_color = colors[int(track.detclass)] if not opt.unique_track_color else \
                                     sort_tracker.color_list[t]
-                                # threshold = int(750 / 1080 * 856)
                                 threshold = 750
                                 isSavePhoto = False
-                                isExit = True
-                                # print(t, 't')
-                                currentDatasetName = detected_dataset_names[t]
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) < threshold and int(
                                         track.centroidarr[0][1]) > threshold:
                                     del tracks[t]
-                                    detected_dataset_names[t] = 'unknown'
                                     if cameraType == 'entrance':
                                         action = 'exit'
                                     else:
@@ -207,13 +203,33 @@ def detect(save_img=False):
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) > threshold and int(
                                         track.centroidarr[0][1]) < threshold:
                                     del tracks[t]
-                                    detected_dataset_names[t] = 'unknown'
                                     if cameraType == 'entrance':
                                         action = 'entrance'
                                     else:
                                         action = 'exit'
                                     isSavePhoto = True
                                 if isSavePhoto and action == cameraType:
+                                    if detected_dataset_names[t] == 'unknown':
+                                        currentDatasetName = 'unknown'
+                                    else:
+                                        averageMatches = []
+                                        faceFrames = 0
+                                        for currentMatch in detected_dataset_names[t]:
+                                            if currentMatch == 'unknown':
+                                                continue
+                                            faceFrames += 1
+                                            if not len(averageMatches):
+                                                averageMatches = currentMatch
+                                            else:
+                                                for matchId, eachMatch in enumerate(currentMatch):
+                                                    averageMatches[matchId] += eachMatch
+                                        for averageMatchId, averageMatch in enumerate(averageMatches):
+                                            averageMatches[averageMatchId] = averageMatch / faceFrames
+                                        print(faceFrames, 'faceFrames ')
+                                        print(averageMatches, 'averageMatches')
+                                        best_match_index = np.argmin(averageMatches)
+                                        currentDatasetName = dataset_names[best_match_index]
+                                    detected_dataset_names[t] = 'unknown'
                                     photoName = str(uuid.uuid4())
                                     save_photo_url = save_photo_dir + photoName + '.jpg'
                                     cv2.imwrite(save_photo_url, im0)
