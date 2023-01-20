@@ -30,13 +30,6 @@ services:
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
       - /home/server/reps/database/dataset:/var/www/5scontrol/dataset
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [ gpu ]
   django:
     restart: always
     image: artsiom24091/django:latest

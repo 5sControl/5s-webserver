@@ -45,17 +45,17 @@ def detect_person_in_video(image):
     datasets_names = []
     for face_encoding in encodings:
         matches = face_recognition.face_distance(known_face_encodings, face_encoding)
-        name = "Unknown"
+        name = "unknown"
         print(matches, 'matches')
         if len(matches):
             best_match_index = np.argmin(matches)
-            if matches[best_match_index] and matches[best_match_index] < 0.6:
+            if matches[best_match_index] and matches[best_match_index] < 1:
                 name = dataset_names[best_match_index]
                 datasets_names.append(name)
 
     return datasets_names
 
-detected_dataset_names = ['Unknown'] * 1000000
+detected_dataset_names = ['unknown'] * 1000000
 
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
@@ -181,7 +181,7 @@ def detect(save_img=False):
 
                         dataset_recognised_names = detect_person_in_video(im0)
                         for i, name in enumerate(dataset_recognised_names):
-                            if detected_dataset_names[i] == 'Unknown':
+                            if detected_dataset_names[i] == 'unknown':
                                 detected_dataset_names[i] = name
 
                         if opt.show_track:
@@ -198,7 +198,7 @@ def detect(save_img=False):
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) < threshold and int(
                                         track.centroidarr[0][1]) > threshold:
                                     del tracks[t]
-                                    detected_dataset_names[t] = 'Unknown'
+                                    detected_dataset_names[t] = 'unknown'
                                     if cameraType == 'entrance':
                                         action = 'exit'
                                     else:
@@ -207,7 +207,7 @@ def detect(save_img=False):
                                 if int(track.centroidarr[len(track.centroidarr) - 1][1]) > threshold and int(
                                         track.centroidarr[0][1]) < threshold:
                                     del tracks[t]
-                                    detected_dataset_names[t] = 'Unknown'
+                                    detected_dataset_names[t] = 'unknown'
                                     if cameraType == 'entrance':
                                         action = 'entrance'
                                     else:
@@ -224,9 +224,7 @@ def detect(save_img=False):
                                     # difference = nowSeconds - startTimeSeconds
                                     #
                                     # print(frames / difference, 'fps')
-                                    # r = requests.post(url = 'http://django:8000/api/employees/history/', json = data)
-                                    # res = r.json()
-                                    # print(res, 'res')
+                                    r = requests.post(url = 'http://django:8000/api/history/', json = data)
 
                 # cv2.imshow(str(p), im0)
                 # cv2.waitKey(1)
