@@ -42,6 +42,8 @@ def detect_person_in_video(image):
     rframe = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
     locations = face_recognition.face_locations(rframe)
     print(len(locations), 'len(locations)')
+    if not len(locations):
+        return []
     encodings = face_recognition.face_encodings(rframe, locations)
     print(len(encodings), 'len(encodings)')
     datasets_matches = []
