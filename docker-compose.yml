@@ -25,7 +25,7 @@ services:
     depends_on:
       - django
     environment:
-      CAMERA_URL: 'rtsp://admin:just4Taqtile@192.168.1.161/Streaming/Channels/1'
+      CAMERA_URL: 'rtsp://admin:just4Taqtile@192.168.1.163/Streaming/Channels/1'
       CAMERA_TYPE: 'entrance'
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
