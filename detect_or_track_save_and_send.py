@@ -365,7 +365,7 @@ if __name__ == '__main__':
     print(opt.sources)
     np.random.seed(opt.seed)
 
-    sources_array = opt.sources
+    sources_array = cameraUrls.split(' ')
     if not sources_array:
         sources_array = ['0']
     sort_trackers = []
