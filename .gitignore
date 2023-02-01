@@ -1,1 +1,7 @@
 images/
+database/
+dataset/
+runs/
+yolov7.pt
+traced_model.pt
+docker-compose_dev.yml

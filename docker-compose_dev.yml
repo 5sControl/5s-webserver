@@ -10,11 +10,11 @@ services:
     depends_on:
       - django
     environment:
-      CAMERA_URLS: 'rtsp://admin:just4Taqtile@192.168.1.160/h264_stream rtsp://admin:just4Taqtile@192.168.1.161/h264_stream'
+      CAMERA_URLS: 'rtsp://admin:just4Taqtile@192.168.1.64/h264_stream'
       CAMERA_TYPES: 'exit entrance'
     volumes:
-      -  /home/server/reps/images:/var/www/5scontrol/images
-      -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
+      -  /home/ferrari/reps/server-/images:/var/www/5scontrol/images
+      -  /home/ferrari/reps/server-/dataset/dataset/dataset:/var/www/5scontrol/dataset
     deploy:
       resources:
         reservations:
@@ -33,8 +33,8 @@ services:
       SECRET_KEY: "django-insecure-osfh^r%nvpun6ek2z4n!f*&r@$g+*d8n#8z0ac9_%)%api0x)7"
       DEBUG: "True"
     volumes:
-      -  /home/server/reps/images:/usr/src/app/images
-      -  /home/server/reps/database:/usr/src/app/database
+      -  /home/ferrari/reps/server-/images:/usr/src/app/images
+      -  /home/ferrari/reps/server-/database:/usr/src/app/database
   face_recognition_queue:
     restart: always
     image: artsiom24091/face_recognition_queue:latest
@@ -46,7 +46,7 @@ services:
     ports:
       - "8008:8008"
     volumes:
-      -  /home/server/reps/images:/usr/src/app/images
-      -  /home/server/reps/database/dataset:/usr/src/app/dataset
+      -  /home/ferrari/reps/server-/images:/usr/src/app/images
+      -  /home/ferrari/reps/server-/dataset/dataset/dataset:/usr/src/app/dataset
   redis:
     image: redis:6-alpine
