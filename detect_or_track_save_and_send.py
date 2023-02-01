@@ -10,6 +10,7 @@ import re
 import os
 import requests
 import pickle
+import asyncio
 import face_recognition
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
@@ -23,60 +24,85 @@ from utils.torch_utils import select_device, load_classifier, time_synchronized,
 from sort import *
 
 from datetime import datetime
-cameraUrl = os.environ['CAMERA_URL']
-cameraType = os.environ['CAMERA_TYPE']
-
-dataset_names = []
-dataset = os.walk("dataset")
-known_face_encodings = []
-for data in dataset:
-    dataset_names = data[2]
-    for dataset_name in data[2]:
-        loaded_dataset = pickle.loads(open("dataset/" + dataset_name, "rb").read())
-        print(dataset_name, 'dataset_name')
-        known_face_encodings.append(loaded_dataset)
-print(dataset_names, 'dataset_names')
 
 
-def detect_person_in_video(image):
+# docker
+cameraUrls = os.environ['CAMERA_URLS']
+cameraTypes = os.environ['CAMERA_TYPES']
+
+# dataset_names = []
+# dataset = os.walk("dataset")
+# known_face_encodings = []
+# for data in dataset:
+#     dataset_names = data[2]
+#     for dataset_name in data[2]:
+#         loaded_dataset = pickle.loads(open("dataset/" + dataset_name, "rb").read())
+#         print(dataset_name, 'dataset_name')
+#         known_face_encodings.append(loaded_dataset)
+# print(dataset_names, 'dataset_names')
+# def detect_person_in_video(image):
     rframe = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
     locations = face_recognition.face_locations(rframe)
-    print(len(locations), 'len(locations)')
     if not len(locations):
-        return []
+        return [[], image]
+    img = image
+    for face_location in locations:
+        img = cv2.circle(image, (face_location[1] * 4,  face_location[0] * 4), 5, (255,0,0), thickness=1, lineType=8, shift=0)
+        img = cv2.circle(img, (face_location[3] * 4,  face_location[2] * 4), 5, (0, 0, 255), thickness=1, lineType=8, shift=0)
     encodings = face_recognition.face_encodings(rframe, locations)
-    print(len(encodings), 'len(encodings)')
     datasets_matches = []
-    for face_encoding in encodings:
+    for id, face_encoding in enumerate(encodings):
         matches = face_recognition.face_distance(known_face_encodings, face_encoding)
         datasets_matches.append(matches)
-        # if len(matches):
-        #     best_match_index = np.argmin(matches)
-        #     if matches[best_match_index] and matches[best_match_index] < 1:
-        #         name = dataset_names[best_match_index]
-        #         datasets_names.append(name)
-    print(datasets_matches, 'datasets_matches')
-    return datasets_matches
+#         font = cv2.FONT_HERSHEY_SIMPLEX
+#         # bottomLeftCornerOfText = (locations[id][1], locations[id][2])
+#         fontScale = 1
+#         fontColor = (0, 255, 0)
+#         thickness = 1
+#         lineType = 2
+#         # cv2.putText(img, 'Hello World!',
+#         #             bottomLeftCornerOfText,
+#         #             font,
+#         #             fontScale,
+#         #             fontColor,
+#         #             thickness,
+#         #             lineType)
+#     print(datasets_matches, 'datasets_matches')
+#     return [datasets_matches, img]
 
-detected_dataset_names = ['unknown'] * 30
+# detected_dataset_names = ['unknown'] * 30
 
-def detect(save_img=False):
-    source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
-    save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
-    webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
-        ('rtsp://', 'rtmp://', 'http://', 'https://'))
-    source = cameraUrl
-    frames = 0
-    startTime = datetime.today()
-    startTimeSeconds = startTime.timestamp()
-    save_dir = Path(increment_path(Path(opt.project) / opt.name, exist_ok=opt.exist_ok))  # increment run
-    if not opt.nosave:
-        (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
-    people = 0
-    ip = re.findall(r'(?:\d{1,3}\.)+(?:\d{1,3})', source)
-    save_photo_dir = 'images/' + ip[0] + '/'
-    if not os.path.exists(save_photo_dir):
-        os.mkdir(save_photo_dir)
+def detect():
+    sources, actions, weights, imgsz = opt.sources, opt.actions, opt.weights, opt.img_size
+    # docker
+    if not sources:
+        sources = cameraUrls.split(' ')
+        actions = cameraTypes.split(' ')
+
+    if sources[0] == '0':
+        save_photo_dirs = ['images/123/', 'images/ip_camera/']
+        if not os.path.exists(save_photo_dirs[0]):
+            os.mkdir(save_photo_dirs[0])
+        if not os.path.exists(save_photo_dirs[1]):
+            os.mkdir(save_photo_dirs[1])
+        ips = ['123', 'ip_camera']
+        frames_counters = [0, 0]
+        tracksImages = [{}, {}]
+    else:
+        ips = []
+        frames_counters = []
+        save_photo_dirs = []
+        tracksImages = []
+        for source in sources:
+            print(source)
+            ip_address = re.findall(r'(?:\d{1,3}\.)+(?:\d{1,3})', source)[0]
+            ips.append(ip_address)
+            dir_name = 'images/' + ip_address + '/'
+            save_photo_dirs.append(dir_name)
+            frames_counters.append(0)
+            tracksImages.append({})
+            if not os.path.exists(dir_name):
+                os.mkdir(dir_name)
 
     # Initialize
     set_logging()
@@ -87,6 +113,7 @@ def detect(save_img=False):
     model = attempt_load(weights, map_location=device)  # load FP32 model
     stride = int(model.stride.max())  # model stride
     imgsz = check_img_size(imgsz, s=stride)  # check img_size
+    trace = True
     if trace:
         model = TracedModel(model, device, opt.img_size)
 
@@ -100,7 +127,7 @@ def detect(save_img=False):
         modelc.load_state_dict(torch.load('weights/resnet101.pt', map_location=device)['model']).to(device).eval()
 
     cudnn.benchmark = True  # set True to speed up constant image size inference
-    dataset = LoadStreams(source, img_size=imgsz, stride=stride)
+    dataset = LoadStreams(sources=sources, img_size=imgsz, stride=stride)
 
     # Get names and colors
     names = model.module.names if hasattr(model, 'module') else model.names
@@ -114,10 +141,18 @@ def detect(save_img=False):
 
     t0 = time.time()
     ###################################
-    startTime = 0
     ###################################
+    startTime = 0
+    frames_counter_fps = 0
     for path, img, im0s, vid_cap in dataset:
-        # frames += 1
+
+        currentTime = time.time()
+        fps = 1 / (currentTime - startTime)
+        startTime = currentTime
+        if frames_counter_fps == 300:
+            print(fps, 'FPS')
+            frames_counter_fps = 0
+        frames_counter_fps += 1
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
@@ -149,10 +184,8 @@ def detect(save_img=False):
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             p, s, im0, frame = path[i], '%g: ' % i, im0s[i].copy(), dataset.count
-
             p = Path(p)  # to Path
-            save_path = str(save_dir / p.name)  # img.jpg
-            txt_path = str(save_dir / 'labels' / p.stem) + ('' if dataset.mode == 'image' else f'_{frame}')  # img.txt
+
             gn = torch.tensor(im0.shape)[[1, 0, 1, 0]]  # normalization gain whwh
             if len(det):
                 # Rescale boxes from img_size to im0 size
@@ -172,94 +205,136 @@ def detect(save_img=False):
                 if opt.track:
                     opt.show_track = True
 
-                    tracked_dets = sort_tracker.update(dets_to_sort, opt.unique_track_color)
-                    tracks = sort_tracker.getTrackers()
+                    tracked_dets = sort_trackers[i].update(dets_to_sort, opt.unique_track_color)
+                    tracks = sort_trackers[i].getTrackers()
 
                     # draw boxes for visualization
                     if len(tracked_dets) > 0:
-                        bbox_xyxy = tracked_dets[:, :4]
-                        identities = tracked_dets[:, 8]
-                        categories = tracked_dets[:, 4]
-                        confidences = None
+                        photoSavedUrl = False
+                        if frames_counters[i] == 50:
+                            photoName = str(uuid.uuid4())
+                            save_photo_url = save_photo_dirs[i] + photoName + '.jpg'
+                            photoSavedUrl = save_photo_url
+                            cv2.imwrite(save_photo_url, im0)
+                            frames_counters[i] = 0
+                        if frames_counters[i] != 50:
+                            frames_counters[i] += 1
 
-                        dataset_recognised_matches = detect_person_in_video(im0)
-                        for i, matches in enumerate(dataset_recognised_matches):
-                            if detected_dataset_names[i] == 'unknown':
-                                detected_dataset_names[i] = [matches]
-                            else:
-                                detected_dataset_names[i].append(matches)
+                        # bbox_xyxy = tracked_dets[:, :4]
+                        # identities = tracked_dets[:, 8]
+                        # categories = tracked_dets[:, 4]
+                        # confidences = None
+                        #
+                        # detected_persons = detect_person_in_video(im0)
+                        # dataset_recognised_matches = detected_persons[0]
+                        dataset_recognised_matches = []
+                        # im0 = detected_persons[1]
+                        # for matchId, matches in enumerate(dataset_recognised_matches):
+                        #     if detected_dataset_names[matchId] == 'unknown':
+                        #         detected_dataset_names[matchId] = [matches]
+                        #     else:
+                        #         detected_dataset_names[matchId].append(matches)
                         if opt.show_track:
                             # loop over tracks
                             for t, track in enumerate(tracks):
-                                print(len(tracks), 'len(tracks)')
+                                x_coord = int(track.centroidarr[len(track.centroidarr) - 1][0])
+                                y_coord = int(track.centroidarr[len(track.centroidarr) - 1][1])
+                                try:
+                                    if not tracksImages[i][t]:
+                                        tracksImages[i][t] = []
+                                except KeyError:
+                                    tracksImages[i][t] = []
+                                if photoSavedUrl:
+                                    tracksImages[i][t].append({'image': photoSavedUrl, 'body_coordinates': {'x': x_coord, 'y': y_coord}})
                                 track_color = colors[int(track.detclass)] if not opt.unique_track_color else \
-                                    sort_tracker.color_list[t]
-                                threshold = 750
+                                sort_trackers[i].color_list[t]
+
+                                [cv2.line(im0, (int(track.centroidarr[i][0]),
+                                                int(track.centroidarr[i][1])),
+                                          (int(track.centroidarr[i + 1][0]),
+                                           int(track.centroidarr[i + 1][1])),
+                                          track_color, thickness=opt.thickness)
+                                 for i, _ in enumerate(track.centroidarr)
+                                 if i < len(track.centroidarr) - 1]
+                                thresholds = [750, 750]
+                                threshold = thresholds[i]
+                                cv2.line(im0, (0, threshold), (1919, threshold), (0, 0, 255), 2)
                                 isSavePhoto = False
-                                if int(track.centroidarr[len(track.centroidarr) - 1][1]) < threshold and int(
+                                cameraType = actions[i]
+                                if y_coord < threshold and int(
                                         track.centroidarr[0][1]) > threshold:
                                     del tracks[t]
+                                    temp_tracks_images = tracksImages[i][t]
+                                    tracksImages[i][t] = []
                                     if cameraType == 'entrance':
                                         action = 'exit'
                                     else:
                                         action = 'entrance'
                                     isSavePhoto = True
-                                if int(track.centroidarr[len(track.centroidarr) - 1][1]) > threshold and int(
+                                if y_coord > threshold and int(
                                         track.centroidarr[0][1]) < threshold:
                                     del tracks[t]
+                                    temp_tracks_images = tracksImages[i][t]
+                                    tracksImages[i][t] = []
                                     if cameraType == 'entrance':
                                         action = 'entrance'
                                     else:
                                         action = 'exit'
                                     isSavePhoto = True
                                 if isSavePhoto and action == cameraType:
-                                    if detected_dataset_names[t] == 'unknown':
-                                        currentDatasetName = 'unknown'
+                                    # if detected_dataset_names[t] == 'unknown':
+                                    #     currentDatasetName = 'unknown'
+                                    # else:
+                                    #     averageMatches = []
+                                    #     faceFrames = 0
+                                    #     for currentMatch in detected_dataset_names[t]:
+                                    #         if currentMatch == 'unknown':
+                                    #             continue
+                                    #         faceFrames += 1
+                                    #         if not len(averageMatches):
+                                    #             averageMatches = currentMatch
+                                    #         else:
+                                    #             for matchId, eachMatch in enumerate(currentMatch):
+                                    #                 averageMatches[matchId] += eachMatch
+                                    #     for averageMatchId, averageMatch in enumerate(averageMatches):
+                                    #         averageMatches[averageMatchId] = averageMatch / faceFrames
+                                    #     best_match_index = np.argmin(averageMatches)
+                                    #     currentDatasetName = dataset_names[best_match_index]
+                                    # detected_dataset_names[t] = 'unknown'
+                                    if not photoSavedUrl:
+                                        photoName = str(uuid.uuid4())
+                                        save_photo_url = save_photo_dirs[i] + photoName + '.jpg'
+                                        im0 = cv2.circle(im0,
+                                                         (int(track.centroidarr[0][0]), int(track.centroidarr[0][1])),
+                                                         5,
+                                                         (255, 0, 0), thickness=1, lineType=8, shift=0)
+                                        cv2.imwrite(save_photo_url, im0)
+                                        temp_tracks_images.append({'image': save_photo_url, 'body_coordinates': {'x': x_coord, 'y': y_coord}})
                                     else:
-                                        averageMatches = []
-                                        faceFrames = 0
-                                        for currentMatch in detected_dataset_names[t]:
-                                            if currentMatch == 'unknown':
-                                                continue
-                                            faceFrames += 1
-                                            if not len(averageMatches):
-                                                averageMatches = currentMatch
-                                            else:
-                                                for matchId, eachMatch in enumerate(currentMatch):
-                                                    averageMatches[matchId] += eachMatch
-                                        for averageMatchId, averageMatch in enumerate(averageMatches):
-                                            averageMatches[averageMatchId] = averageMatch / faceFrames
-                                        print(faceFrames, 'faceFrames ')
-                                        print(averageMatches, 'averageMatches')
-                                        best_match_index = np.argmin(averageMatches)
-                                        currentDatasetName = dataset_names[best_match_index]
-                                    detected_dataset_names[t] = 'unknown'
-                                    photoName = str(uuid.uuid4())
-                                    save_photo_url = save_photo_dir + photoName + '.jpg'
-                                    cv2.imwrite(save_photo_url, im0)
-                                    data = {'image': save_photo_url, 'action': action, 'camera': ip[0],'name_file': currentDatasetName}
+                                        im0 = cv2.circle(im0,
+                                                         (int(track.centroidarr[0][0]), int(track.centroidarr[0][1])),
+                                                         5,
+                                                         (255, 0, 0), thickness=1, lineType=8, shift=0)
+                                        cv2.imwrite(photoSavedUrl, im0)
+                                    face_frames = []
+
+                                    for face_frame in temp_tracks_images:
+                                        face_frames.append({'image': face_frame['image'], 'body_coordinates': face_frame['body_coordinates']})
+                                    data = {'frames': face_frames, 'action': action, 'camera_address': ips[i]}
                                     print(data, 'data')
-                                    # date_now = datetime.today()
-                                    # nowSeconds = date_now.timestamp()
-                                    # difference = nowSeconds - startTimeSeconds
-                                    #
-                                    # print(frames / difference, 'fps')
-                                    r = requests.post(url = 'http://django:8000/api/history/', json = data)
-
-                # cv2.imshow(str(p), im0)
-                # cv2.waitKey(1)
-
-    if save_txt or save_img:
-        s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-        # print(f"Results saved to {save_dir}{s}")
+                                    print('frames: ', len(face_frames))
+                                    r = requests.post(url = 'http://face_recognition_queue:8008/action', json = data)
+            # cv2.imshow(str(p), im0)
+            # cv2.waitKey(1)
 
     print(f'Done. ({time.time() - t0:.3f}s)')
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--weights', nargs='+', type=str, default='yolov7.pt', help='model.pt path(s)')
-    parser.add_argument('--source', type=str, default='inference/images', help='source')  # file/folder, 0 for webcam
+    parser.add_argument('--weights', nargs='+', type=str, default='yolov72.pt', help='model.pt path(s)')
+    parser.add_argument('--sources', nargs='+', type=str, default=False, help='sources')
+    parser.add_argument('--actions', nargs='+', type=str, default=False, help='actions')
     parser.add_argument('--img-size', type=int, default=640, help='inference size (pixels)')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='object confidence threshold')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='IOU threshold for NMS')
@@ -287,18 +362,22 @@ if __name__ == '__main__':
     parser.add_argument('--unique-track-color', action='store_true', help='show each track in unique color')
 
     opt = parser.parse_args()
-    print(opt)
+    print(opt.sources)
     np.random.seed(opt.seed)
 
-    sort_tracker = Sort(max_age=5,
-                        min_hits=2,
-                        iou_threshold=0.2)
-
-    # check_requirements(exclude=('pycocotools', 'thop'))
+    sources_array = opt.sources
+    if not sources_array:
+        sources_array = ['0']
+    sort_trackers = []
+    for source in sources_array:
+        tracker = Sort(max_age=5,
+                       min_hits=2,
+                       iou_threshold=0.2)
+        sort_trackers.append(tracker)
 
     with torch.no_grad():
         if opt.update:  # update all models (to fix SourceChangeWarning)
-            for opt.weights in ['yolov7.pt']:
+            for opt.weights in ['yolov72.pt']:
                 detect()
                 strip_optimizer(opt.weights)
         else:
