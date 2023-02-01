@@ -41,19 +41,19 @@ cameraTypes = os.environ['CAMERA_TYPES']
 #         known_face_encodings.append(loaded_dataset)
 # print(dataset_names, 'dataset_names')
 # def detect_person_in_video(image):
-    rframe = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
-    locations = face_recognition.face_locations(rframe)
-    if not len(locations):
-        return [[], image]
-    img = image
-    for face_location in locations:
-        img = cv2.circle(image, (face_location[1] * 4,  face_location[0] * 4), 5, (255,0,0), thickness=1, lineType=8, shift=0)
-        img = cv2.circle(img, (face_location[3] * 4,  face_location[2] * 4), 5, (0, 0, 255), thickness=1, lineType=8, shift=0)
-    encodings = face_recognition.face_encodings(rframe, locations)
-    datasets_matches = []
-    for id, face_encoding in enumerate(encodings):
-        matches = face_recognition.face_distance(known_face_encodings, face_encoding)
-        datasets_matches.append(matches)
+#     rframe = cv2.resize(image, (0, 0), fx=0.25, fy=0.25)
+#     locations = face_recognition.face_locations(rframe)
+#     if not len(locations):
+#         return [[], image]
+#     img = image
+#     for face_location in locations:
+#         img = cv2.circle(image, (face_location[1] * 4,  face_location[0] * 4), 5, (255,0,0), thickness=1, lineType=8, shift=0)
+#         img = cv2.circle(img, (face_location[3] * 4,  face_location[2] * 4), 5, (0, 0, 255), thickness=1, lineType=8, shift=0)
+#     encodings = face_recognition.face_encodings(rframe, locations)
+#     datasets_matches = []
+#     for id, face_encoding in enumerate(encodings):
+#         matches = face_recognition.face_distance(known_face_encodings, face_encoding)
+#         datasets_matches.append(matches)
 #         font = cv2.FONT_HERSHEY_SIMPLEX
 #         # bottomLeftCornerOfText = (locations[id][1], locations[id][2])
 #         fontScale = 1
