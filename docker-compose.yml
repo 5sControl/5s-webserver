@@ -57,3 +57,18 @@ services:
     container_name: proxy
     ports:
       - "3066:3066"
+  safety_tracker:
+    restart: always
+    image: artsiom24091/safety_tracker:latest
+    build: .
+    container_name: safety_tracker
+    ports:
+      - "3020:3020"
+    depends_on:
+      - django
+    environment:
+      CAMERA_URLS: 'rtsp://admin:just4Taqtile@192.168.1.160/h264_stream rtsp://admin:just4Taqtile@192.168.1.161/h264_stream'
+      CAMERA_TYPES: 'exit entrance'
+    volumes:
+      -  /home/server/reps/images:/var/www/5scontrol/images
+      -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset    
