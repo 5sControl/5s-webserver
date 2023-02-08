@@ -28,7 +28,7 @@ services:
     build: .
     container_name: django
     ports:
-      - "8000:8000"
+      - "80:8000"
     environment:
       SECRET_KEY: "django-insecure-osfh^r%nvpun6ek2z4n!f*&r@$g+*d8n#8z0ac9_%)%api0x)7"
       DEBUG: "True"
@@ -78,6 +78,6 @@ services:
     build: .
     container_name: 5scontrol_front
     ports:
-      - "80:3000"
+      - "3000:3000"
     depends_on:
       - django
