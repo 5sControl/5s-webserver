@@ -40,16 +40,11 @@ services:
     image: artsiom24091/face_recognition_queue:latest
     build: .
     container_name: face_recognition_queue
-    environment:
-      - CELERY_BROKER_URL=redis://redis:6379/0
-      - CELERY_RESULT_BACKEND=redis://redis:6379/0
     ports:
       - "8008:8008"
     volumes:
       -  /home/server/reps/images:/usr/src/app/images
       -  /home/server/reps/database/dataset:/usr/src/app/dataset
-  redis:
-    image: redis:6-alpine
   proxy:
     restart: always
     image: artsiom24091/proxy:latest
