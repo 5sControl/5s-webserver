@@ -12,7 +12,7 @@ services:
     environment:
       CAMERA_URLS: 'rtsp://admin:just4Taqtile@192.168.1.160/h264_stream rtsp://admin:just4Taqtile@192.168.1.161/h264_stream'
       CAMERA_TYPES: 'exit entrance'
-      HOST_IP: ${HOST_IP}
+      HOST_IP: '192.168.1.101'
     volumes:
       -  /home/server/reps/images:/var/www/5scontrol/images
       -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
