@@ -25,7 +25,7 @@ from sort import *
 
 from datetime import datetime
 
-host_ip = os.environ.get['HOST_IP']
+host_ip = os.environ.get('HOST_IP')
 print(host_ip, 'host_ip')
 if not host_ip:
     host_ip = 'localhost'
