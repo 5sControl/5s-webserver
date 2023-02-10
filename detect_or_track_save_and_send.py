@@ -25,7 +25,10 @@ from sort import *
 
 from datetime import datetime
 
-
+host_ip = os.environ.get['HOST_IP']
+print(host_ip, 'host_ip')
+if not host_ip:
+    host_ip = 'localhost'
 # docker
 cameraUrls = os.environ['CAMERA_URLS']
 cameraTypes = os.environ['CAMERA_TYPES']
@@ -323,7 +326,7 @@ def detect():
                                     data = {'frames': face_frames, 'action': action, 'camera_address': ips[i]}
                                     print(data, 'data')
                                     print('frames: ', len(face_frames))
-                                    r = requests.post(url = 'http://face_recognition_queue:8008/action', json = data)
+                                    r = requests.post(url = 'http://' + host_ip + ':8008/action', json = data)
             # cv2.imshow(str(p), im0)
             # cv2.waitKey(1)
 
