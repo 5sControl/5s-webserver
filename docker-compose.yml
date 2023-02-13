@@ -30,6 +30,7 @@ services:
     container_name: django
     ports:
       - "80:8000"
+      - "8080:8080"
     environment:
       SECRET_KEY: "django-insecure-osfh^r%nvpun6ek2z4n!f*&r@$g+*d8n#8z0ac9_%)%api0x)7"
       DEBUG: "True"
