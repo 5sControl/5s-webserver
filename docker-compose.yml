@@ -84,5 +84,5 @@ services:
       - "3000:3000"
     depends_on:
       - django
-    environment:
-      HOST_IP: $(hostname -I | awk '{print $1}')
+    tty: true
+    network_mode: host
