@@ -31,11 +31,11 @@ services:
     container_name: proxy
     ports:
       - "3066:3066"
-  safety_tracker:
+  detection_runner:
     restart: always
     image: artsiom24091/safety_tracker:latest
     build: .
-    container_name: safety_tracker
+    container_name: detection_runner
     ports:
       - "3020:3020"
     depends_on:
@@ -54,5 +54,3 @@ services:
       - "3000:3000"
     depends_on:
       - django
-    tty: true
-    network_mode: host
