@@ -36,8 +36,8 @@ services:
     image: artsiom24091/safety_tracker:latest
     build: .
     container_name: detection_runner
-    ports:
-      - "3020:3020"
+    tty: true
+    network_mode: host
     depends_on:
       - django
     volumes:
