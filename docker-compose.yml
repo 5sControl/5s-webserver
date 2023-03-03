@@ -45,7 +45,7 @@ services:
       - "3066:3066"
   detection_runner:
     restart: always
-    image: artsiom24091/safety_tracker:release
+    image: artsiom24091/safety_tracker:latest
     build: .
     container_name: detection_runner
     tty: true
