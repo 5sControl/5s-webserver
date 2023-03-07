@@ -5,17 +5,17 @@ services:
     image: artsiom24091/django:latest
     build: .
     container_name: django
-    ports:
-      - "80:8000"
     environment:
       SECRET_KEY: "0123456789abcdef0123456789abcdef"
       DEBUG: "True"
-      SQL_ENGINE: "sql_server.pyodbc"
+      SQL_ENGINE: "mssql"
       SQL_NAME: "test"
       SQL_USER: "root"
       SQL_PASSWORD: "just4Taqtile"
       SQL_HOST: "localhost"
       SQL_PORT: "3306"
+    tty: true
+    network_mode: host
     volumes:
       -  /home/server/reps/images:/usr/src/app/images
       -  /home/server/reps/database:/usr/src/app/database
