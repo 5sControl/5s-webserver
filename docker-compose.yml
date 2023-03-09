@@ -59,6 +59,18 @@ services:
     volumes:
       -  /home/server/reps/images:/var/www/5scontrol/images
       -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset     
+  operation_control:
+    restart: always
+    image: artsiom24091/operation_control:latest
+    build: .
+    container_name: operation_control
+    tty: true
+    network_mode: host
+    depends_on:
+      - django
+    volumes:
+      -  /home/server/reps/images:/var/www/5scontrol/images
+      -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
   5scontrol_front:
     restart: always
     image: artsiom24091/5scontrol_front:latest
