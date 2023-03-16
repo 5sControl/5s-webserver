@@ -28,6 +28,7 @@ services:
       IP: "192.168.1.101"
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
+      - /home/server/reps/videos:/var/www/5scontrol/videos
     depends_on:
       - django
     tty: true
