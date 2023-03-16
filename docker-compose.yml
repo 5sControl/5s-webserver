@@ -29,6 +29,7 @@ services:
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
       - /home/server/reps/videos:/var/www/5scontrol/videos
+      - /home/server/reps/database:/var/www/5scontrol/database
     depends_on:
       - django
     tty: true
