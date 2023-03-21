@@ -41,6 +41,12 @@ services:
     build: .
     container_name: face_recognition_queue
     environment:
+      SQL_ENGINE: "mssql"
+      SQL_NAME: "test"
+      SQL_USER: "root"
+      SQL_PASSWORD: "just4Taqtile"
+      SQL_HOST: "localhost"
+      SQL_PORT: "3306"
       IP: "192.168.1.110"
     volumes:
       -  /home/server/reps/images:/usr/src/app/images
