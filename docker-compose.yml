@@ -37,7 +37,7 @@ services:
     environment:
       SQL_SERVER: "192.168.1.110"
       SQL_DATABASE_NAME: "test"
-      SQL_USERNAME: "root"
+      SQL_USERNAME: "sa"
       SQL_PASSWORD: "just4Taqtile"
       IP: "192.168.1.110"
     volumes:
