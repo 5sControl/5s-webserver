@@ -73,12 +73,3 @@ services:
       - "3000:3000"
     depends_on:
       - django
-  rtsp_server:
-    restart: always
-    image: aler9/rtsp-simple-server
-    build: .
-    container_name: rtsp_server
-    tty: true
-    network_mode: host
-    depends_on:
-      - django
