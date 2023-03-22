@@ -29,22 +29,6 @@ services:
       - django
     tty: true
     network_mode: host
-  face_recognition_queue:
-    restart: always
-    image: artsiom24091/face_recognition_queue:latest
-    build: .
-    container_name: face_recognition_queue
-    environment:
-      SQL_SERVER: "192.168.1.110"
-      SQL_DATABASE_NAME: "test"
-      SQL_USERNAME: "sa"
-      SQL_PASSWORD: "just4Taqtile"
-      IP: "192.168.1.110"
-    volumes:
-      -  /home/server/reps/images:/usr/src/app/images
-      -  /home/server/reps/database/dataset:/usr/src/app/dataset
-    tty: true
-    network_mode: host
   proxy:
     restart: always
     image: artsiom24091/proxy:release
