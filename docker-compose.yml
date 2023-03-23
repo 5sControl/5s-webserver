@@ -9,6 +9,7 @@ services:
       SECRET_KEY: "0123456789abcdef0123456789abcdef"
       DEBUG: "True"
       ALGORITHM_URL: "http://192.168.1.110"
+      IP: "192.168.1.110"
     tty: true
     network_mode: host
     volumes:
