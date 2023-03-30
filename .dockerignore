@@ -1,4 +1,6 @@
-**/dataset
-**/database
-**/images
+dataset
+database
+images
 docker-compose_dev.yml
+release
+videos
