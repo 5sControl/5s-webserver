@@ -1,4 +1,4 @@
-.PHONY: django front algorithms pull-all --run
+.PHONY: django front algorithms onvif pull-all run push clear-images
 
 django:
 	cd ../5sControll-backend-django/ && git pull && sudo docker build -t artsiom24091/django${version} . && cd ../server-
@@ -17,3 +17,5 @@ run:
 	sudo docker-compose down && sudo docker-compose up
 push:
 	sudo docker push artsiom24091/django${version} && sudo docker push artsiom24091/onvif${version} && sudo docker push artsiom24091/algorithms${version} sudo docker push artsiom24091/5scontrol_front${version}
+clear-images:
+	docker rmi $(docker images -f "dangling=true" -q)
