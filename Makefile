@@ -16,6 +16,6 @@ pull-all:
 run:
 	sudo docker-compose down && sudo docker-compose up
 push:
-	sudo docker push artsiom24091/django${version} && sudo docker push artsiom24091/onvif${version} && sudo docker push artsiom24091/algorithms${version} sudo docker push artsiom24091/5scontrol_front${version}
+	sudo docker push artsiom24091/django${version} && sudo docker push artsiom24091/onvif${version} && sudo docker push artsiom24091/algorithms${version} && sudo docker push artsiom24091/5scontrol_front${version}
 clear-images:
 	docker rmi $(docker images -f "dangling=true" -q)
