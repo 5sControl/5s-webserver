@@ -61,6 +61,5 @@ services:
       - django
   onviffinder:
     image: nnnxion/onviffinder:latest
-    ports:
-      - "7654:7654"
     network_mode: host
+    tty: true
