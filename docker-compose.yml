@@ -59,3 +59,7 @@ services:
       - "3000:3000"
     depends_on:
       - django
+  onviffinder:
+    image: nnnxion/onviffinder:latest
+    tty: true
+    network_mode: host
