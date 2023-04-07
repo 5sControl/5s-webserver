@@ -64,3 +64,5 @@ services:
     image: nnnxion/onviffinder:latest
     network_mode: host
     tty: true
+    environment:
+      IP: "192.168.1.110"
