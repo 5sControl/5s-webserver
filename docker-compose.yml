@@ -51,6 +51,19 @@ services:
       -  /home/server/reps/images:/var/www/5scontrol/images
       -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
       -  /home/server/reps/debug:/var/www/5scontrol/debug
+  algorithms_torch:
+    restart: always
+    image: artsiom24091/algorithms_torch:v0.0.4
+    build: .
+    container_name: algorithms_torch
+    tty: true
+    network_mode: host
+    depends_on:
+      - django
+    volumes:
+      -  /home/server/reps/images:/var/www/5scontrol/images
+      -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
+      -  /home/server/reps/debug:/var/www/5scontrol/debug
   5scontrol_front:
     restart: always
     image: artsiom24091/5scontrol_front:latest
