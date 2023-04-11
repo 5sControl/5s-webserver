@@ -75,12 +75,14 @@ services:
       - django
   onviffinder:
     image: nnnxion/onviffinder:latest
+    container_name: onvif_finder
     network_mode: host
     tty: true
     environment:
       IP: "192.168.1.110"
   emulate_operation_control:
     image: nnnxion/emulate_operation_control
+    container_name: operation_report_handler
     network_mode: host
     tty: true
     environment:
