@@ -1,7 +1,6 @@
 images/
 database/
 dataset/
-release/
 videos/
 runs/
 yolov7.pt
