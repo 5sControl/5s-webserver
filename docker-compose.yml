@@ -40,7 +40,7 @@ services:
       - "3066:3066"   
   algorithms:
     restart: always
-    image: artsiom24091/algorithms:v0.2.7
+    image: artsiom24091/algorithms:latest
     build: .
     container_name: algorithms
     tty: true
