@@ -77,3 +77,10 @@ services:
       DB_DATABASE: "test"
       DB_USERNAME: "sa"
       DB_PASS: "just4Taqtile"
+  redis:
+    image: redis
+    command: redis-server --maxmemory-policy volatile-ttl
+    ports:
+      - "6379:6379"
+    sysctls:
+      - net.core.somaxconn=250
