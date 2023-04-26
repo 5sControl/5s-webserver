@@ -11,6 +11,7 @@ services:
       ALGORITHM_URL: "http://192.168.1.110"
       IP: "192.168.1.110"
       PRODUCTION: "False"
+      HASH: "86b698bee10834850d82d9e23ec84474336d5ad8dd55c0408f6dd10436152eeb"
     tty: true
     network_mode: host
     volumes:
