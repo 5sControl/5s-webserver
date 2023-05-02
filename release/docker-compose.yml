@@ -8,8 +8,9 @@ services:
     environment:
       SECRET_KEY: "0123456789abcdef0123456789abcdef"
       DEBUG: "True"
-      ALGORITHM_URL: "http://192.168.1.184"
+      SERVER_URL: "http://192.168.1.184"
       IP: "192.168.1.184"
+      PRODUCTION: "False"
     tty: true
     network_mode: host
     volumes:
