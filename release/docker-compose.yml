@@ -3,13 +3,13 @@ services:
   django:
     restart: always
     image: artsiom24091/django:v0.3.1
-    build: python
+    build: .
     container_name: django
     environment:
       SECRET_KEY: "0123456789abcdef0123456789abcdef"
       DEBUG: "True"
-      ALGORITHM_URL: "http://192.168.1.110"
-      IP: "192.168.1.110"
+      ALGORITHM_URL: "http://192.168.1.184"
+      IP: "192.168.1.184"
     tty: true
     network_mode: host
     volumes:
@@ -19,10 +19,10 @@ services:
   onvif:
     restart: always
     image: artsiom24091/onvif:v0.3.1
-    build: python
+    build: .
     container_name: onvif
     environment:
-      IP: "192.168.1.110"
+      IP: "192.168.1.184"
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
       - /home/server/reps/videos:/var/www/5scontrol/videos
@@ -34,14 +34,14 @@ services:
   proxy:
     restart: always
     image: artsiom24091/proxy:release
-    build: python
+    build: .
     container_name: proxy
     ports:
       - "3066:3066"   
   algorithms:
     restart: always
     image: artsiom24091/algorithms:v0.3.1
-    build: python
+    build: .
     container_name: algorithms
     tty: true
     network_mode: host
@@ -54,7 +54,7 @@ services:
   algorithms_torch:
     restart: always
     image: artsiom24091/algorithms_torch:v0.3.1
-    build: python
+    build: .
     container_name: algorithms_torch
     tty: true
     network_mode: host
@@ -67,7 +67,7 @@ services:
   5scontrol_front:
     restart: always
     image: artsiom24091/5scontrol_front:v0.3.1
-    build: python
+    build: .
     container_name: 5scontrol_front
     ports:
       - "3000:3000"
@@ -79,14 +79,14 @@ services:
     network_mode: host
     tty: true
     environment:
-      IP: "192.168.1.110"
+      IP: "192.168.1.184"
   emulate_operation_control:
     image: nnnxion/emulate_operation_control
     container_name: operation_report_handler
     network_mode: host
     tty: true
     environment:
-      DB_SERVER: "192.168.1.110"
+      DB_SERVER: "192.168.1.184"
       DB_DATABASE: "test"
       DB_USERNAME: "sa"
       DB_PASS: "just4Taqtile"
