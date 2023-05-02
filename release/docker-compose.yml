@@ -2,8 +2,8 @@ version: '3'
 services:
   django:
     restart: always
-    image: artsiom24091/django:v0.2.9
-    build: ..
+    image: artsiom24091/django:v0.3.1
+    build: python
     container_name: django
     environment:
       SECRET_KEY: "0123456789abcdef0123456789abcdef"
@@ -18,8 +18,8 @@ services:
       -  /home/server/reps/database:/usr/src/app/database
   onvif:
     restart: always
-    image: artsiom24091/onvif:v0.2.9
-    build: ..
+    image: artsiom24091/onvif:v0.3.1
+    build: python
     container_name: onvif
     environment:
       IP: "192.168.1.110"
@@ -34,15 +34,28 @@ services:
   proxy:
     restart: always
     image: artsiom24091/proxy:release
-    build: ..
+    build: python
     container_name: proxy
     ports:
       - "3066:3066"   
   algorithms:
     restart: always
-    image: artsiom24091/algorithms:v0.2.9
-    build: ..
+    image: artsiom24091/algorithms:v0.3.1
+    build: python
     container_name: algorithms
+    tty: true
+    network_mode: host
+    depends_on:
+      - django
+    volumes:
+      -  /home/server/reps/images:/var/www/5scontrol/images
+      -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
+      -  /home/server/reps/debug:/var/www/5scontrol/debug
+  algorithms_torch:
+    restart: always
+    image: artsiom24091/algorithms_torch:v0.3.1
+    build: python
+    container_name: algorithms_torch
     tty: true
     network_mode: host
     depends_on:
@@ -53,8 +66,8 @@ services:
       -  /home/server/reps/debug:/var/www/5scontrol/debug
   5scontrol_front:
     restart: always
-    image: artsiom24091/5scontrol_front:v0.2.9
-    build: ..
+    image: artsiom24091/5scontrol_front:v0.3.1
+    build: python
     container_name: 5scontrol_front
     ports:
       - "3000:3000"
