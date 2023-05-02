@@ -54,7 +54,7 @@ services:
       -  /home/server/reps/debug:/var/www/5scontrol/debug
   algorithms_torch:
     restart: always
-    image: artsiom24091/algorithms_torch:v0.3.0
+    image: artsiom24091/algorithms_torch:v0.3.1
     build: .
     container_name: algorithms_torch
     tty: true
