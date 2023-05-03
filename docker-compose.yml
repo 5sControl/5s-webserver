@@ -17,6 +17,16 @@ services:
       -  /home/server/reps/images:/usr/src/app/images
       -  /home/server/reps/videos:/usr/src/app/videos
       -  /home/server/reps/database:/usr/src/app/database
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: just4Taqtile
+      POSTGRES_DB: fiveScontrol
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
   onvif:
     restart: always
     image: artsiom24091/onvif:latest
