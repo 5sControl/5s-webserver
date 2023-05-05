@@ -2,14 +2,14 @@ version: '3'
 services:
   django:
     restart: always
-    image: artsiom24091/django:v0.3.1
+    image: artsiom24091/django:v0.3.3
     build: .
     container_name: django
     environment:
       SECRET_KEY: "0123456789abcdef0123456789abcdef"
       DEBUG: "True"
-      SERVER_URL: "http://192.168.1.184"
-      IP: "192.168.1.184"
+      SERVER_URL: "http://192.168.1.150"
+      IP: "192.168.1.150"
       PRODUCTION: "False"
     tty: true
     network_mode: host
@@ -17,13 +17,23 @@ services:
       -  /home/server/reps/images:/usr/src/app/images
       -  /home/server/reps/videos:/usr/src/app/videos
       -  /home/server/reps/database:/usr/src/app/database
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: just4Taqtile
+      POSTGRES_DB: fiveScontrol
+    ports:
+      - "5432:5432"
+    volumes:
+      - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
   onvif:
     restart: always
-    image: artsiom24091/onvif:v0.3.1
+    image: artsiom24091/onvif:v0.3.2
     build: .
     container_name: onvif
     environment:
-      IP: "192.168.1.184"
+      IP: "192.168.1.150"
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
       - /home/server/reps/videos:/var/www/5scontrol/videos
@@ -41,7 +51,7 @@ services:
       - "3066:3066"   
   algorithms:
     restart: always
-    image: artsiom24091/algorithms:v0.3.1
+    image: artsiom24091/algorithms:v0.3.2
     build: .
     container_name: algorithms
     tty: true
@@ -54,7 +64,7 @@ services:
       -  /home/server/reps/debug:/var/www/5scontrol/debug
   algorithms_torch:
     restart: always
-    image: artsiom24091/algorithms_torch:v0.3.1
+    image: artsiom24091/algorithms_torch:v0.3.2
     build: .
     container_name: algorithms_torch
     tty: true
@@ -67,7 +77,7 @@ services:
       -  /home/server/reps/debug:/var/www/5scontrol/debug
   5scontrol_front:
     restart: always
-    image: artsiom24091/5scontrol_front:v0.3.1
+    image: artsiom24091/5scontrol_front:v0.3.3
     build: .
     container_name: 5scontrol_front
     ports:
@@ -80,14 +90,14 @@ services:
     network_mode: host
     tty: true
     environment:
-      IP: "192.168.1.184"
+      IP: "192.168.1.150"
   emulate_operation_control:
     image: nnnxion/emulate_operation_control
     container_name: operation_report_handler
     network_mode: host
     tty: true
     environment:
-      DB_SERVER: "192.168.1.184"
+      DB_SERVER: "192.168.1.150"
       DB_DATABASE: "test"
       DB_USERNAME: "sa"
       DB_PASS: "just4Taqtile"
