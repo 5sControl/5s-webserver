@@ -11,8 +11,6 @@ services:
       SERVER_URL: "http://192.168.1.110"
       IP: "192.168.1.110"
       PRODUCTION: "False"
-      MIN_MAX_PYTHON: "True"
-      IDLE_PYTHON: "True"
     tty: true
     network_mode: host
     volumes:
@@ -58,6 +56,10 @@ services:
     container_name: algorithms
     tty: true
     network_mode: host
+    environment:
+      IP: "192.168.1.110"
+      MIN_MAX_PYTHON: "True"
+      IDLE_PYTHON: "True"
     depends_on:
       - django
     volumes:
