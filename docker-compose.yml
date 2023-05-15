@@ -52,6 +52,7 @@ services:
   algorithms:
     restart: always
     image: artsiom24091/algorithms:latest
+    privileged: true
     build: .
     container_name: algorithms
     tty: true
@@ -66,6 +67,8 @@ services:
       -  /home/server/reps/images:/var/www/5scontrol/images
       -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
       -  /home/server/reps/debug:/var/www/5scontrol/debug
+      -  /var/run/docker.sock:/var/run/docker.sock
+    stdin_open: true
   algorithms_torch:
     restart: always
     image: artsiom24091/algorithms_torch:v0.3.4
