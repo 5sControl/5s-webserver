@@ -60,7 +60,6 @@ services:
     environment:
       IP: "192.168.1.110"
       MIN_MAX_PYTHON: "True"
-      IDLE_PYTHON: "True"
     depends_on:
       - django
     volumes:
