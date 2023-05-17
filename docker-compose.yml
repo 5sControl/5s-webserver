@@ -42,13 +42,6 @@ services:
       - django
     tty: true
     network_mode: host
-  proxy:
-    restart: always
-    image: 5scontrol/proxy:release
-    build: .
-    container_name: proxy
-    ports:
-      - "3066:3066"   
   algorithms:
     restart: always
     image: 5scontrol/algorithms:latest
