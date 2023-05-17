@@ -8,8 +8,8 @@ services:
     environment:
       SECRET_KEY: "0123456789abcdef0123456789abcdef"
       DEBUG: "True"
-      SERVER_URL: "http://192.168.1.110"
-      IP: "192.168.1.110"
+      SERVER_URL: "http://192.168.1.184"
+      IP: "192.168.1.184"
       PRODUCTION: "False"
     tty: true
     network_mode: host
@@ -33,7 +33,7 @@ services:
     build: .
     container_name: onvif
     environment:
-      IP: "192.168.1.110"
+      IP: "192.168.1.184"
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
       - /home/server/reps/videos:/var/www/5scontrol/videos
@@ -51,7 +51,7 @@ services:
     tty: true
     network_mode: host
     environment:
-      IP: "192.168.1.110"
+      IP: "192.168.1.184"
       MIN_MAX_PYTHON: "True"
       IDLE_PYTHON: "True"
     depends_on:
@@ -77,14 +77,14 @@ services:
     network_mode: host
     tty: true
     environment:
-      IP: "192.168.1.110"
+      IP: "192.168.1.184"
   emulate_operation_control:
     image: nnnxion/emulate_operation_control
     container_name: operation_report_handler
     network_mode: host
     tty: true
     environment:
-      DB_SERVER: "192.168.1.110"
+      DB_SERVER: "192.168.1.184"
       DB_DATABASE: "test"
       DB_USERNAME: "sa"
       DB_PASS: "just4Taqtile"
