@@ -1,6 +1,12 @@
-VERSION ?= v0.3.6-legendary
+define edit_docker_compose
+	IP := $(shell hostname -I | grep -Eo '192\.[0-9]+\.[0-9]+\.[0-9]+')
+	sed -i 's/SERVER_URL:.*/SERVER_URL: "http:\/\/$$(IP)"/' /home/server/reps/docker-compose.yml
+	sed -i 's/IP:.*/IP: "$$(IP)"/' /home/server/reps/docker-compose.yml
+endef
 
-mkdir:
+export edit_docker_compose
+
+build:
 	sudo mkdir -p /home/server/reps/images/
 	sudo mkdir -p /home/server/reps/videos/
 	sudo mkdir -p /home/server/reps/database/
@@ -13,16 +19,7 @@ download_files:
 	mv Makefile /home/server/reps/
 
 edit_docker_compose:
-	cd /home/server/reps/
-	IP := $(shell hostname -I | grep -Eo '192\.[0-9]+\.[0-9]+\.[0-9]+')
-	sed -i 's/SERVER_URL:.*/SERVER_URL: "http:\/\/$(IP)"/' /home/server/reps/docker-compose.yml
-	sed -i 's/IP:.*/IP: "$(IP)"/' /home/server/reps/docker-compose.yml
+	$(value edit_docker_compose)
 
 run_server:
 	make -f Makefile run
-
-build:
-	make -f Makefile.builder mkdir
-	make -f Makefile.builder download_files
-	make -f Makefile.builder edit_docker_compose
-	make -f Makefile.builder run_server
