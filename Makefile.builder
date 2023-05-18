@@ -13,12 +13,12 @@ download_files:
 	mv Makefile /home/server/reps/
 
 edit_docker_compose:
+	cd /home/server/reps/
 	IP := $(shell hostname -I | grep -Eo '192\.[0-9]+\.[0-9]+\.[0-9]+')
 	sed -i 's/SERVER_URL:.*/SERVER_URL: "http:\/\/$(IP)"/' /home/server/reps/docker-compose.yml
 	sed -i 's/IP:.*/IP: "$(IP)"/' /home/server/reps/docker-compose.yml
 
 run_server:
-	cd /home/server/reps/
 	make -f Makefile run
 
 build:
