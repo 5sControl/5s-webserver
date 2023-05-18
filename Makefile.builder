@@ -11,3 +11,9 @@ build:
 	curl -LJO https://github.com/5sControl/server-/releases/download/$(VERSION)/Makefile
 	mv docker-compose.yml /home/server/reps/
 	mv Makefile /home/server/reps/
+
+	edit_docker_compose:
+	
+
+	run_server:
+	make -f Makefile run
