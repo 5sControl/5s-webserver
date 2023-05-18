@@ -1,9 +1,9 @@
 .PHONY: django front algorithms onvif pull-all run push clear-images
 
 django:
-	cd ../5sControll-backend-django/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/django${version} . && cd ../server-
+	cd ../5sControll-backend-django/ && git checkout developent && git reset --hard origin/developent && git pull && sudo docker build -t 5scontrol/django${version} . && cd ../server-
 front:
-	cd ../django-front/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/5scontrol_front${version} . && cd ../server-
+	cd ../django-front/ && git checkout developent && git reset --hard origin/developent && git pull && sudo docker build -t 5scontrol/5scontrol_front${version} . && cd ../server-
 algorithms:
 	cd ../algorithms/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/algorithms${version} . && cd ../server-
 onvif:
