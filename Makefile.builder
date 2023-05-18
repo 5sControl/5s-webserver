@@ -18,6 +18,7 @@ edit_docker_compose:
 	sed -i 's/IP:.*/IP: "$(IP)"/' /home/server/reps/docker-compose.yml
 
 run_server:
+	cd /home/server/reps/
 	make -f Makefile run
 
 build:
