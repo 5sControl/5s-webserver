@@ -17,6 +17,7 @@ services:
       -  /home/server/reps/images:/usr/src/app/images
       -  /home/server/reps/videos:/usr/src/app/videos
       -  /home/server/reps/database:/usr/src/app/database
+      -  /home/server/reps/log:/usr/src/app/log
   db:
     image: postgres:latest
     environment:
