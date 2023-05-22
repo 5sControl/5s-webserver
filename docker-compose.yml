@@ -73,7 +73,7 @@ services:
     depends_on:
       - django
   onviffinder:
-    image: nnnxion/onviffinder:latest
+    image: 5scontrol/onviffinder:latest
     container_name: onvif_finder
     network_mode: host
     tty: true
