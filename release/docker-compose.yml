@@ -2,7 +2,7 @@ version: '3'
 services:
   django:
     restart: always
-    image: 5scontrol/django:v0.3.6
+    image: 5scontrol/django:v0.3.7
     build: .
     container_name: django
     environment:
@@ -17,6 +17,7 @@ services:
       -  /home/server/reps/images:/usr/src/app/images
       -  /home/server/reps/videos:/usr/src/app/videos
       -  /home/server/reps/database:/usr/src/app/database
+      -  /home/server/reps/log:/usr/src/app/log
   db:
     image: postgres:latest
     environment:
@@ -29,7 +30,7 @@ services:
       - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
   onvif:
     restart: always
-    image: 5scontrol/onvif:v0.3.6
+    image: 5scontrol/onvif:v0.3.7
     build: .
     container_name: onvif
     environment:
@@ -44,7 +45,7 @@ services:
     network_mode: host
   algorithms:
     restart: always
-    image: 5scontrol/algorithms:v0.3.6
+    image: 5scontrol/algorithms:v0.3.7
     privileged: true
     build: .
     container_name: algorithms
@@ -64,7 +65,7 @@ services:
     stdin_open: true
   5scontrol_front:
     restart: always
-    image: 5scontrol/5scontrol_front:v0.3.6
+    image: 5scontrol/5scontrol_front:v0.3.7
     build: .
     container_name: 5scontrol_front
     ports:
@@ -72,7 +73,7 @@ services:
     depends_on:
       - django
   onviffinder:
-    image: nnnxion/onviffinder:latest
+    image: 5scontrol/onviffinder:latest
     container_name: onvif_finder
     network_mode: host
     tty: true
@@ -84,7 +85,7 @@ services:
     network_mode: host
     tty: true
     environment:
-      DB_SERVER: "192.168.1.184"
+      DB_SERVER: "192.168.1.110"
       DB_DATABASE: "test"
       DB_USERNAME: "sa"
       DB_PASS: "just4Taqtile"

@@ -4,6 +4,10 @@ django:
 	cd ../5sControll-backend-django/ && git checkout development && git reset --hard origin/development && git pull && sudo docker build -t 5scontrol/django${version} . && cd ../server-
 front:
 	cd ../django-front/ && git checkout development && git reset --hard origin/development && git pull && sudo docker build -t 5scontrol/5scontrol_front${version} . && cd ../server-
+django-build:
+	cd ../5sControll-backend-django/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/django${version} . && cd ../server-
+front-build:
+	cd ../django-front/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/5scontrol_front${version} . && cd ../server-
 algorithms:
 	cd ../algorithms/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/algorithms${version} . && cd ../server-
 onvif:
@@ -13,6 +17,11 @@ run:
 pull-all:
 	make django
 	make front
+	make onvif
+	make algorithms
+pull-all:
+	make django-build
+	make front-build
 	make onvif
 	make algorithms
 push:
