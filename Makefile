@@ -11,10 +11,10 @@ onvif:
 run:
 	sudo docker-compose down && sudo docker-compose up
 pull-all:
-    make django
-    make front
-    make onvif
-    make algorithms
+	make django
+	make front
+	make onvif
+	make algorithms
 push:
 	sudo docker push 5scontrol/django${version} && sudo docker push 5scontrol/onvif${version} && sudo docker push 5scontrol/algorithms${version} && sudo docker push 5scontrol/5scontrol_front${version}
 clear-images:
