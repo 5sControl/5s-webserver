@@ -19,7 +19,7 @@ pull-all:
 	make front
 	make onvif
 	make algorithms
-pull-all:
+pull-all-build:
 	make django-build
 	make front-build
 	make onvif
