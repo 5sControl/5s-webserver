@@ -60,7 +60,6 @@ services:
     volumes:
       -  /home/server/reps/images:/var/www/5scontrol/images
       -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
-      -  /home/server/reps/debug:/var/www/5scontrol/debug
       -  /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true
   5scontrol_front:
