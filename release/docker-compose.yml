@@ -2,7 +2,7 @@ version: '3'
 services:
   django:
     restart: always
-    image: 5scontrol/django:v0.3.7
+    image: 5scontrol/django:v0.3.8
     build: .
     container_name: django
     environment:
@@ -30,7 +30,7 @@ services:
       - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
   onvif:
     restart: always
-    image: 5scontrol/onvif:v0.3.7
+    image: 5scontrol/onvif:v0.3.8
     build: .
     container_name: onvif
     environment:
@@ -45,7 +45,7 @@ services:
     network_mode: host
   algorithms:
     restart: always
-    image: 5scontrol/algorithms:v0.3.7
+    image: 5scontrol/algorithms:v0.3.8
     privileged: true
     build: .
     container_name: algorithms
@@ -65,7 +65,7 @@ services:
     stdin_open: true
   5scontrol_front:
     restart: always
-    image: 5scontrol/5scontrol_front:v0.3.7
+    image: 5scontrol/5scontrol_front:v0.3.8
     build: .
     container_name: 5scontrol_front
     ports:
