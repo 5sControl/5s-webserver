@@ -43,12 +43,12 @@ services:
       - django
     tty: true
     network_mode: host
-  algorithms:
+  algorithms-controller:
     restart: always
-    image: 5scontrol/algorithms:latest
+    image: 5scontrol/algorithms-controller:latest
     privileged: true
     build: .
-    container_name: algorithms
+    container_name: algorithms-controller
     tty: true
     network_mode: host
     environment:
