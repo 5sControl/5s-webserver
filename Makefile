@@ -25,7 +25,7 @@ pull-all-build:
 	make onvif
 	make algorithms-controller
 push:
-	sudo docker push 5scontrol/django${version} && sudo docker push 5scontrol/onvif${version} && sudo docker push 5scontrol/algorithms-controller{version} && sudo docker push 5scontrol/5scontrol_front${version}
+	sudo docker push 5scontrol/django${version} && sudo docker push 5scontrol/onvif${version} && sudo docker push 5scontrol/algorithms-controller${version} && sudo docker push 5scontrol/5scontrol_front${version}
 clear-images:
 	docker rmi $(docker images -f "dangling=true" -q)
 build:
