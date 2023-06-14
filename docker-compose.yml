@@ -20,6 +20,7 @@ services:
       -  /home/server/reps/log:/usr/src/app/log
   db:
     image: postgres:latest
+    container_name: db
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: just4Taqtile
@@ -90,6 +91,7 @@ services:
       DB_PASS: "just4Taqtile"
   redis:
     image: redis
+    container_name: redis
     command: redis-server --maxmemory-policy volatile-ttl
     ports:
       - "6379:6379"

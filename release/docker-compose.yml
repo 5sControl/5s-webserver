@@ -2,7 +2,7 @@ version: '3'
 services:
   django:
     restart: always
-    image: 5scontrol/django:v0.4.0
+    image: 5scontrol/django:v0.4.1
     build: .
     container_name: django
     environment:
@@ -20,6 +20,7 @@ services:
       -  /home/server/reps/log:/usr/src/app/log
   db:
     image: postgres:latest
+    container_name: db
     environment:
       POSTGRES_USER: admin
       POSTGRES_PASSWORD: just4Taqtile
@@ -30,7 +31,7 @@ services:
       - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
   onvif:
     restart: always
-    image: 5scontrol/onvif:v0.4.0
+    image: 5scontrol/onvif:v0.4.1
     build: .
     container_name: onvif
     environment:
@@ -45,7 +46,7 @@ services:
     network_mode: host
   algorithms-controller:
     restart: always
-    image: 5scontrol/algorithms-controller:v0.4.0
+    image: 5scontrol/algorithms-controller:v0.4.1
     privileged: true
     build: .
     container_name: algorithms-controller
@@ -64,7 +65,7 @@ services:
     stdin_open: true
   5scontrol_front:
     restart: always
-    image: 5scontrol/5scontrol_front:v0.4.0
+    image: 5scontrol/5scontrol_front:v0.4.1
     build: .
     container_name: 5scontrol_front
     ports:
@@ -90,6 +91,7 @@ services:
       DB_PASS: "just4Taqtile"
   redis:
     image: redis
+    container_name: redis
     command: redis-server --maxmemory-policy volatile-ttl
     ports:
       - "6379:6379"
