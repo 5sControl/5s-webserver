@@ -10,7 +10,7 @@ services:
       DEBUG: "True"
       SERVER_URL: "http://192.168.1.110"
       IP: "192.168.1.110"
-      PRODUCTION: "False"
+      EMULATE_DB: "True"
     tty: true
     network_mode: host
     volumes:
