@@ -97,3 +97,13 @@ services:
       - "6379:6379"
     sysctls:
       - net.core.somaxconn=250
+  tests:
+    restart: always
+    image: 5scontrol/tests:latest
+    container_name: tests
+    build: .
+    ports:
+      - "7000:7000"
+    environment:
+      BACKEND_PORT: 80
+      IP: "192.168.1.184"
