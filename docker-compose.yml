@@ -75,6 +75,11 @@ services:
       - django
     volumes:
       - /home/server/reps/images:/var/www/5scontrol/images
+    deploy:
+      resources:
+        limits:
+          memory: 5000M
+
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:latest
