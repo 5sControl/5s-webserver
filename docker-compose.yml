@@ -64,6 +64,17 @@ services:
       -  /home/server/reps/debug:/var/www/5scontrol/debug
       -  /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true
+  min_max_model:
+    restart: always
+    image: 5scontrol/min_max_python:v0.3.13-server
+    build: .
+    container_name: min_max_model
+    tty: true
+    network_mode: host
+    depends_on:
+      - django
+    volumes:
+      - /home/server/reps/images:/var/www/5scontrol/images
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:latest
