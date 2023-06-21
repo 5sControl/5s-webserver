@@ -2,7 +2,7 @@ version: '3'
 services:
   django:
     restart: always
-    image: 5scontrol/django:v0.4.1
+    image: 5scontrol/django:v0.4.2
     build: .
     container_name: django
     environment:
@@ -31,7 +31,7 @@ services:
       - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
   onvif:
     restart: always
-    image: 5scontrol/onvif:v0.4.1
+    image: 5scontrol/onvif:v0.4.2
     build: .
     container_name: onvif
     environment:
@@ -46,7 +46,7 @@ services:
     network_mode: host
   algorithms-controller:
     restart: always
-    image: 5scontrol/algorithms-controller:v0.4.1
+    image: 5scontrol/algorithms-controller:v0.4.2
     privileged: true
     build: .
     container_name: algorithms-controller
@@ -65,13 +65,24 @@ services:
     stdin_open: true
   5scontrol_front:
     restart: always
-    image: 5scontrol/5scontrol_front:v0.4.1
+    image: 5scontrol/5scontrol_front:v0.4.2
     build: .
     container_name: 5scontrol_front
     ports:
       - "3000:3000"
     depends_on:
       - django
+  min_max_model:
+    restart: always
+    image: 5scontrol/min_max_python:v0.3.13-server
+    build: .
+    container_name: min_max_model
+    tty: true
+    network_mode: host
+    depends_on:
+      - django
+    volumes:
+      - /home/server/reps/images:/var/www/5scontrol/images
   onviffinder:
     image: 5scontrol/onviffinder:latest
     container_name: onvif_finder
