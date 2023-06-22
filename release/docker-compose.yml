@@ -72,17 +72,6 @@ services:
       - "3000:3000"
     depends_on:
       - django
-  min_max_model:
-    restart: always
-    image: 5scontrol/min_max_python:v0.3.13-server
-    build: .
-    container_name: min_max_model
-    tty: true
-    network_mode: host
-    depends_on:
-      - django
-    volumes:
-      - /home/server/reps/images:/var/www/5scontrol/images
   onviffinder:
     image: 5scontrol/onviffinder:latest
     container_name: onvif_finder
