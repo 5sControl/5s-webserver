@@ -66,16 +66,13 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python:v0.3.13-server
+    image: 5scontrol/min_max_python-server:v0.3.13
     build: .
     container_name: min_max_model
     tty: true
     network_mode: host
-    depends_on:
-      - django
-    volumes:
-      - /home/server/reps/images:/var/www/5scontrol/images
-
+    environment:
+      server_url: "192.168.1.110"
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:latest

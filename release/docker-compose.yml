@@ -63,6 +63,15 @@ services:
       -  /home/server/reps/database/dataset:/var/www/5scontrol/dataset
       -  /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true
+  min_max_model:
+    restart: always
+    image: 5scontrol/min_max_python-server:v0.3.13
+    build: .
+    container_name: min_max_model
+    tty: true
+    network_mode: host
+    environment:
+      server_url: "192.168.1.184"
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:v0.4.2
