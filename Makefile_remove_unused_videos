@@ -1,0 +1,15 @@
+sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \;
+.PHONY: remove
+
+remove:
+    cd /home/server/reps/videos/192.168.1.160 && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+    && cd ../192.168.1.162/ && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+    && cd ../192.168.1.163/ && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+    && cd ../192.168.1.164/ && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+    && cd ../192.168.1.165/ && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+    && cd ../192.168.1.166/ && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+    && cd ../192.168.1.168/ && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+    && cd ../192.168.1.169/ && sudo find ./ -type f ! -newermt "2023-06-26 07:27:07" -exec rm {} \
+
+
+
