@@ -73,6 +73,15 @@ services:
     network_mode: host
     environment:
       server_url: "192.168.1.110"
+  idle_model:
+    restart: always
+    image: 5scontrol/idle_python_server:v0.3.14
+    build: .
+    container_name: idle_model
+    tty: true
+    network_mode: host
+    environment:
+      server_url: "192.168.1.110"
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:latest
