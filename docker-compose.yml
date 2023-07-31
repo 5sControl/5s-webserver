@@ -73,6 +73,15 @@ services:
     network_mode: host
     environment:
       server_url: "192.168.1.110"
+  machine_model:
+    restart: always
+    image: 5scontrol/machine_control_python_model_server:v1.0.0
+    build: .
+    container_name: machine_model
+    tty: true
+    network_mode: host
+    environment:
+      server_url: "192.168.1.110"
   idle_model:
     restart: always
     image: 5scontrol/idle_python_server:v0.4.4

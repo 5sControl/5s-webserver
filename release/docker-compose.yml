@@ -65,16 +65,25 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python-server:v0.4.3
+    image: 5scontrol/min_max_python-server:v0.4.4
     build: .
     container_name: min_max_model
     tty: true
     network_mode: host
     environment:
       server_url: "192.168.1.184"
+  machine_model:
+    restart: always
+    image: 5scontrol/machine_control_python_model_server:v1.0.0
+    build: .
+    container_name: machine_model
+    tty: true
+    network_mode: host
+    environment:
+      server_url: "192.168.1.184"
   idle_model:
     restart: always
-    image: 5scontrol/idle_python_server:v0.4.3
+    image: 5scontrol/idle_python_server:v0.4.4
     build: .
     container_name: idle_model
     tty: true
