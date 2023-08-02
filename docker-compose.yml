@@ -75,7 +75,7 @@ services:
       server_url: "192.168.1.110"
   machine_model:
     restart: always
-    image: 5scontrol/machine_control_python_model_server:v1.0.0
+    image: 5scontrol/machine_control_python_model_server:v1.0.1
     build: .
     container_name: machine_model
     tty: true
