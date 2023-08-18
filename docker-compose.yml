@@ -66,7 +66,7 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python-server:v0.4.6
+    image: 5scontrol/min_max_python-server:v0.4.7
     build: .
     container_name: min_max_model
     tty: true
@@ -74,9 +74,9 @@ services:
     environment:
       server_url: '192.168.1.110'
     deploy:
-     resources:
-      limits:
-       cpus: "1"
+      resources:
+        limits:
+          cpus: '1'
   machine_model:
     restart: always
     image: 5scontrol/machine_control_python_model_server:v1.0.2
@@ -87,9 +87,9 @@ services:
     environment:
       server_url: '192.168.1.110'
     deploy:
-     resources:
-      limits:
-       cpus: "1"
+      resources:
+        limits:
+          cpus: '1'
   idle_model:
     restart: always
     image: 5scontrol/idle_python_server:v0.4.6
@@ -99,9 +99,9 @@ services:
     environment:
       server_url: '192.168.1.110'
     deploy:
-     resources:
-      limits:
-       cpus: "1"
+      resources:
+        limits:
+          cpus: '1'
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:latest
