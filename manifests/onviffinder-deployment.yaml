@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.30.0 (9d8dcb518)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: onviffinder
+  name: onviffinder
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: onviffinder
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.30.0 (9d8dcb518)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/server--default: "true"
+        io.kompose.service: onviffinder
+    spec:
+      containers:
+        - env:
+            - name: IP
+              value: 192.168.1.110
+          image: 5scontrol/onviffinder:latest
+          name: onvif-finder
+          resources: {}
+          tty: true
+      restartPolicy: Always
+status: {}

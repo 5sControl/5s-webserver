@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.30.0 (9d8dcb518)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: algorithms-controller
+  name: algorithms-controller
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: algorithms-controller
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.30.0 (9d8dcb518)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/server--default: "true"
+        io.kompose.service: algorithms-controller
+    spec:
+      containers:
+        - env:
+            - name: IDLE_PYTHON
+              value: "True"
+            - name: IP
+              value: 192.168.1.110
+            - name: MIN_MAX_PYTHON
+              value: "True"
+          image: 5scontrol/algorithms-controller:latest
+          name: algorithms-controller
+          resources: {}
+          securityContext:
+            privileged: true
+          stdin: true
+          tty: true
+          volumeMounts:
+            - mountPath: /var/www/5scontrol/images
+              name: algorithms-controller-claim0
+            - mountPath: /var/www/5scontrol/dataset
+              name: algorithms-controller-claim1
+            - mountPath: /var/www/5scontrol/debug
+              name: algorithms-controller-claim2
+            - mountPath: /var/run/docker.sock
+              name: algorithms-controller-claim3
+      restartPolicy: Always
+      volumes:
+        - name: algorithms-controller-claim0
+          persistentVolumeClaim:
+            claimName: algorithms-controller-claim0
+        - name: algorithms-controller-claim1
+          persistentVolumeClaim:
+            claimName: algorithms-controller-claim1
+        - name: algorithms-controller-claim2
+          persistentVolumeClaim:
+            claimName: algorithms-controller-claim2
+        - name: algorithms-controller-claim3
+          persistentVolumeClaim:
+            claimName: algorithms-controller-claim3
+status: {}

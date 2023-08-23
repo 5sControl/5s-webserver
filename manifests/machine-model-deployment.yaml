@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert
+    kompose.version: 1.30.0 (9d8dcb518)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: machine-model
+  name: machine-model
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: machine-model
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert
+        kompose.version: 1.30.0 (9d8dcb518)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/server--default: "true"
+        io.kompose.service: machine-model
+    spec:
+      containers:
+        - env:
+            - name: server_url
+              value: 192.168.1.110
+          image: 5scontrol/machine_control_python_model_server:v1.0.2
+          name: machine-model
+          resources:
+            limits:
+              cpu: "1"
+          tty: true
+      restartPolicy: Always
+status: {}
