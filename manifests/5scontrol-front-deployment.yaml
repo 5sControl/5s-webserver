@@ -6,14 +6,14 @@ metadata:
     kompose.version: 1.30.0 (9d8dcb518)
   creationTimestamp: null
   labels:
-    io.kompose.service: 5scontrol-front
-  name: 5scontrol-front
+    io.kompose.service: fivescontrol-front
+  name: fivescontrol-front
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      io.kompose.service: 5scontrol-front
+      io.kompose.service: fivescontrol-front
   strategy: {}
   template:
     metadata:
@@ -23,11 +23,11 @@ spec:
       creationTimestamp: null
       labels:
         io.kompose.network/server--default: "true"
-        io.kompose.service: 5scontrol-front
+        io.kompose.service: fivescontrol-front
     spec:
       containers:
         - image: 5scontrol/5scontrol_front:latest
-          name: 5scontrol-front
+          name: fivescontrol-front
           ports:
             - containerPort: 3000
               hostPort: 3000

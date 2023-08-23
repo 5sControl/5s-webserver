@@ -7,3 +7,4 @@ yolov7.pt
 traced_model.pt
 docker-compose_dev.yml
 .DS_Store
+.idea

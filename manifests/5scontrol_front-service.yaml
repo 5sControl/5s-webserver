@@ -6,8 +6,8 @@ metadata:
     kompose.version: 1.30.0 (9d8dcb518)
   creationTimestamp: null
   labels:
-    io.kompose.service: 5scontrol-front
-  name: 5scontrol_front
+    io.kompose.service: fivescontrol-front
+  name: fivescontrolfront
   namespace: default
 spec:
   ports:
@@ -15,6 +15,6 @@ spec:
       port: 3000
       targetPort: 3000
   selector:
-    io.kompose.service: 5scontrol-front
+    io.kompose.service: fivescontrol-front
 status:
   loadBalancer: {}
