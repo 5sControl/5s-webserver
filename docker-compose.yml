@@ -77,6 +77,15 @@ services:
       resources:
         limits:
           cpus: '1'
+  5scontrol_front:
+    restart: always
+    image: 5scontrol/5scontrol_front:latest
+    build: .
+    container_name: 5scontrol_front
+    ports:
+      - '3000:3000'
+    depends_on:
+      - django
   machine_model:
     restart: always
     image: 5scontrol/machine_control_python_model_server:v1.0.2
