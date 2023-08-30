@@ -3,7 +3,6 @@ services:
   django:
     restart: always
     image: 5scontrol/django:v0.5.1
-    build: .
     container_name: django
     environment:
       SECRET_KEY: '0123456789abcdef0123456789abcdef'
@@ -32,7 +31,6 @@ services:
   onvif:
     restart: always
     image: 5scontrol/onvif:v0.5.1
-    build: .
     container_name: onvif
     environment:
       IP: '192.168.1.184'
@@ -48,7 +46,6 @@ services:
     restart: always
     image: 5scontrol/algorithms-controller:v0.5.1
     privileged: true
-    build: .
     container_name: algorithms-controller
     tty: true
     network_mode: host
@@ -66,7 +63,6 @@ services:
   min_max_model:
     restart: always
     image: 5scontrol/min_max_python-server:v0.4.7
-    build: .
     container_name: min_max_model
     tty: true
     network_mode: host
@@ -75,16 +71,26 @@ services:
   machine_model:
     restart: always
     image: 5scontrol/machine_control_python_model_server:v1.0.2
-    build: .
     container_name: machine_model
     tty: true
     network_mode: host
     environment:
       server_url: '192.168.1.184'
+  machine_js_model:
+    restart: always
+    image: 5scontrol/inference_server_js:v0.1.0
+    container_name: machine_js_model
+    tty: true
+    network_mode: host
+    environment:
+      server_url: '192.168.1.110'
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
   idle_model:
     restart: always
     image: 5scontrol/idle_python_server:v0.4.6
-    build: .
     container_name: idle_model
     tty: true
     network_mode: host
@@ -93,7 +99,6 @@ services:
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:v0.5.1
-    build: .
     container_name: 5scontrol_front
     ports:
       - '3000:3000'
@@ -128,7 +133,6 @@ services:
     restart: always
     image: 5scontrol/tests:latest
     container_name: tests
-    build: .
     ports:
       - '7000:7000'
     environment:
