@@ -2,7 +2,7 @@ version: '3'
 services:
   django:
     restart: always
-    image: 5scontrol/django:v0.5.1
+    image: 5scontrol/django:v0.5.2
     container_name: django
     environment:
       SECRET_KEY: '0123456789abcdef0123456789abcdef'
@@ -30,7 +30,7 @@ services:
       - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
   onvif:
     restart: always
-    image: 5scontrol/onvif:v0.5.1
+    image: 5scontrol/onvif:v0.5.2
     container_name: onvif
     environment:
       IP: '192.168.1.184'
@@ -44,7 +44,7 @@ services:
     network_mode: host
   algorithms-controller:
     restart: always
-    image: 5scontrol/algorithms-controller:v0.5.1
+    image: 5scontrol/algorithms-controller:v0.5.2
     privileged: true
     container_name: algorithms-controller
     tty: true
@@ -62,7 +62,7 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python-server:v0.4.7
+    image: 5scontrol/min_max_python-server:v0.5.0
     container_name: min_max_model
     tty: true
     network_mode: host
@@ -83,14 +83,14 @@ services:
     tty: true
     network_mode: host
     environment:
-      server_url: '192.168.1.110'
+      server_url: '192.168.1.184'
     deploy:
       resources:
         limits:
           cpus: '1'
   idle_model:
     restart: always
-    image: 5scontrol/idle_python_server:v0.4.6
+    image: 5scontrol/idle_python_server:v0.5.0
     container_name: idle_model
     tty: true
     network_mode: host
@@ -98,7 +98,7 @@ services:
       server_url: '192.168.1.184'
   5scontrol_front:
     restart: always
-    image: 5scontrol/5scontrol_front:v0.5.1
+    image: 5scontrol/5scontrol_front:v0.5.2
     container_name: 5scontrol_front
     ports:
       - '3000:3000'
