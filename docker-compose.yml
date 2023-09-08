@@ -73,7 +73,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          memory: 4000M
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:latest
@@ -84,7 +84,7 @@ services:
       - django
   machine_model:
     restart: always
-    image: 5scontrol/machine_control_python_model_server:v1.0.2
+    image: 5scontrol/machine_control_python_model_server:v1.0.3
     container_name: machine_model
     tty: true
     network_mode: host
@@ -93,7 +93,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          memory: 4000M
   machine_js_model:
     restart: always
     image: 5scontrol/inference_server_js:v0.1.0
@@ -105,7 +105,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          memory: 4000M
   idle_model:
     restart: always
     image: 5scontrol/idle_python_server:v0.5.0
@@ -117,7 +117,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          memory: 4000M
   onviffinder:
     image: 5scontrol/onviffinder:latest
     container_name: onvif_finder
