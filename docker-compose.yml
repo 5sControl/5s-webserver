@@ -64,7 +64,7 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python-server:v0.5.0
+    image: 5scontrol/min_max_python-server:v0.5.2
     container_name: min_max_model
     tty: true
     network_mode: host
