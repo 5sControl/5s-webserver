@@ -96,7 +96,7 @@ services:
           memory: 4000M
   machine_js_model:
     restart: always
-    image: 5scontrol/inference_server_js:v0.1.0
+    image: 5scontrol/inference_server_js:v0.2.0
     container_name: machine_js_model
     tty: true
     network_mode: host
@@ -106,6 +106,9 @@ services:
       resources:
         limits:
           memory: 4000M
+    volumes:
+      - /home/server/reps/images:/var/www/5scontrol/images
+      - /home/server/reps/debug:/var/www/5scontrol/debug
   idle_model:
     restart: always
     image: 5scontrol/idle_python_server:v0.5.0

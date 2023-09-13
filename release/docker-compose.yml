@@ -62,23 +62,31 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python-server:v0.5.0
+    image: 5scontrol/min_max_python-server:v0.5.2
     container_name: min_max_model
     tty: true
     network_mode: host
     environment:
       server_url: '192.168.1.184'
+    deploy:
+      resources:
+        limits:
+          memory: 3000M
   machine_model:
     restart: always
-    image: 5scontrol/machine_control_python_model_server:v1.0.2
+    image: 5scontrol/machine_control_python_model_server:v1.0.3
     container_name: machine_model
     tty: true
     network_mode: host
     environment:
       server_url: '192.168.1.184'
+    deploy:
+      resources:
+        limits:
+          memory: 3000M
   machine_js_model:
     restart: always
-    image: 5scontrol/inference_server_js:v0.1.0
+    image: 5scontrol/inference_server_js:v0.2.0
     container_name: machine_js_model
     tty: true
     network_mode: host
@@ -87,7 +95,9 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          memory: 3000M
+    volumes:
+      - /home/server/reps/images:/var/www/5scontrol/images
   idle_model:
     restart: always
     image: 5scontrol/idle_python_server:v0.5.0
@@ -96,6 +106,10 @@ services:
     network_mode: host
     environment:
       server_url: '192.168.1.184'
+    deploy:
+      resources:
+        limits:
+          memory: 3000M
   5scontrol_front:
     restart: always
     image: 5scontrol/5scontrol_front:v0.5.2
@@ -111,16 +125,6 @@ services:
     tty: true
     environment:
       IP: '192.168.1.184'
-  emulate_operation_control:
-    image: nnnxion/emulate_operation_control
-    container_name: operation_report_handler
-    network_mode: host
-    tty: true
-    environment:
-      DB_SERVER: '192.168.1.110'
-      DB_DATABASE: 'test'
-      DB_USERNAME: 'sa'
-      DB_PASS: 'just4Taqtile'
   redis:
     image: redis
     container_name: redis
