@@ -64,7 +64,7 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python-server:v0.5.2
+    image: 5scontrol/min_max_python-server:v0.5.3
     container_name: min_max_model
     tty: true
     network_mode: host
@@ -84,7 +84,7 @@ services:
       - django
   machine_model:
     restart: always
-    image: 5scontrol/machine_control_python_model_server:v1.0.3
+    image: 5scontrol/machine_control_python_model_server:v1.0.4
     container_name: machine_model
     tty: true
     network_mode: host
@@ -96,7 +96,7 @@ services:
           memory: 4000M
   machine_js_model:
     restart: always
-    image: 5scontrol/inference_server_js:v0.2.0
+    image: 5scontrol/inference_server_js:v0.3.0
     container_name: machine_js_model
     tty: true
     network_mode: host
@@ -111,7 +111,7 @@ services:
       - /home/server/reps/debug:/var/www/5scontrol/debug
   idle_model:
     restart: always
-    image: 5scontrol/idle_python_server:v0.5.0
+    image: 5scontrol/idle_python_server:v0.5.2
     container_name: idle_model
     tty: true
     network_mode: host
@@ -128,16 +128,16 @@ services:
     tty: true
     environment:
       IP: '192.168.1.110'
-  emulate_operation_control:
-    image: nnnxion/emulate_operation_control
-    container_name: operation_report_handler
-    network_mode: host
-    tty: true
-    environment:
-      DB_SERVER: '192.168.1.110'
-      DB_DATABASE: 'test'
-      DB_USERNAME: 'sa'
-      DB_PASS: 'just4Taqtile'
+  #  emulate_operation_control:
+  #    image: nnnxion/emulate_operation_control
+  #    container_name: operation_report_handler
+  #    network_mode: host
+  #    tty: true
+  #    environment:
+  #      DB_SERVER: '192.168.1.110'
+  #      DB_DATABASE: 'test'
+  #      DB_USERNAME: 'sa'
+  #      DB_PASS: 'just4Taqtile'
   redis:
     image: redis
     container_name: redis
