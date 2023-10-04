@@ -12,6 +12,8 @@ services:
       EMULATE_DB: 'True'
       LICENSE_ACTIVE: 'True'
     tty: true
+    ports:
+      - '8000:8000'
     network_mode: host
     volumes:
       - /home/server/reps/images:/usr/src/app/images
