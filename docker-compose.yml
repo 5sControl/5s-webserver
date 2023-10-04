@@ -21,7 +21,7 @@ services:
       - /home/server/reps/database:/usr/src/app/database
       - /home/server/reps/log:/usr/src/app/log
   db:
-    image: postgres:latest
+    image: postgres:15
     container_name: db
     environment:
       POSTGRES_USER: admin
@@ -67,7 +67,7 @@ services:
     stdin_open: true
   min_max_model:
     restart: always
-    image: 5scontrol/min_max_python-server:v0.5.3
+    image: 5scontrol/min_max_python-server:latest
     container_name: min_max_model
     tty: true
     network_mode: host
@@ -87,7 +87,7 @@ services:
       - django
   machine_model:
     restart: always
-    image: 5scontrol/machine_control_python_model_server:v1.0.4
+    image: 5scontrol/machine_control_python_model_server:latest
     container_name: machine_model
     tty: true
     network_mode: host

@@ -9,6 +9,8 @@ django-build:
 front-build:
 	cd ../django-front/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/5scontrol_front${version} . && cd ../server-
 algorithms-controller:
+	cd ../algorithms-controller/ && git checkout dev && git reset --hard origin/dev && git pull && sudo docker build -t 5scontrol/algorithms-controller${version} . && cd ../server-
+algorithms-controller-build:
 	cd ../algorithms-controller/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/algorithms-controller${version} . && cd ../server-
 onvif:
 	cd ../onvif/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/onvif${version} . && cd ../server-
@@ -23,7 +25,7 @@ pull-all-build:
 	make django-build
 	make front-build
 	make onvif
-	make algorithms-controller
+	make algorithms-controller-build
 push:
 	sudo docker push 5scontrol/django${version} && sudo docker push 5scontrol/onvif${version} && sudo docker push 5scontrol/algorithms-controller${version} && sudo docker push 5scontrol/5scontrol_front${version}
 clear-images:
