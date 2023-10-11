@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: min-max-model
+  labels:
+    deployment: min-max-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: min-max-model
+  template:
+    metadata:
+      labels:
+        pod: min-max-model
+    spec:
+      containers:
+        - name: min-max-model
+          image: 5scontrol/min_max_python-server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5000
+              hostPort: 5000
+              protocol: TCP
+          env:
+            - name: server_url
+              value: 192.168.1.136
+      restartPolicy: Always

@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: machine-model
+  labels:
+    deployment: machine-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: machine-model
+  template:
+    metadata:
+      labels:
+        pod: machine-model
+    spec:
+      containers:
+        - name: machine-model
+          image: 5scontrol/machine_control_python_model_server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 81
+              hostPort: 81
+              protocol: TCP
+          env:
+            - name: server_url
+              value: 192.168.1.136
+      restartPolicy: Always

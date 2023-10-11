@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx
+  labels:
+    deployment: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: nginx
+  template:
+    metadata:
+      labels:
+        pod: nginx
+    spec:
+      containers:
+        - name: nginx
+          image: nginx:latest
+          volumeMounts:
+            - name: nginx
+              mountPath: /etc/nginx/conf.d
+          ports:
+            - containerPort: 80
+              hostPort: 80
+              protocol: TCP
+      restartPolicy: Always
+      volumes:
+        - name: nginx
+          persistentVolumeClaim:
+            claimName: nginx

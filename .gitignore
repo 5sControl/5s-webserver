@@ -8,3 +8,4 @@ traced_model.pt
 docker-compose_dev.yml
 .DS_Store
 .idea
+manifests/node_modules

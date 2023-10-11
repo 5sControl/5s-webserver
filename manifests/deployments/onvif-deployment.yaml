@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onvif
+  labels:
+    deployment: onvif
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: onvif
+  template:
+    metadata:
+      labels:
+        pod: onvif
+    spec:
+      containers:
+        - name: onvif
+          image: 5scontrol/onvif:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: images
+              mountPath: /var/www/5scontrol/images
+            - name: videos
+              mountPath: /var/www/5scontrol/videos
+            - name: db
+              mountPath: /var/www/5scontrol/database
+          ports:
+            - containerPort: 3456
+              hostPort: 3456
+              protocol: TCP
+          env:
+            - name: IP
+              value: 192.168.1.136
+      restartPolicy: Always
+      volumes:
+        - name: images
+          persistentVolumeClaim:
+            claimName: images
+        - name: videos
+          persistentVolumeClaim:
+            claimName: videos
+        - name: db
+          persistentVolumeClaim:
+            claimName: db

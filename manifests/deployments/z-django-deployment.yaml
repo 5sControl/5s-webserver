@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+  labels:
+    deployment: django
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: django
+  template:
+    metadata:
+      labels:
+        pod: django
+    spec:
+      containers:
+        - name: django
+          image: 5scontrol/django:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: images
+              mountPath: /usr/src/app/images
+            - name: videos
+              mountPath: /usr/src/app/videos
+            - name: db
+              mountPath: /usr/src/app/database
+          ports:
+            - containerPort: 8000
+              hostPort: 8000
+              protocol: TCP
+          env:
+            - name: REDIS_HOST
+              value: redis-service
+            - name: DB_HOST
+              value: pgservice
+            - name: DEBUG
+              value: "True"
+            - name: EMULATE_DB
+              value: "True"
+            - name: IP
+              value: 192.168.1.136
+            - name: SECRET_KEY
+              value: 0123456789abcdef0123456789abcdef
+            - name: SERVER_URL
+              value: http://192.168.1.136
+      restartPolicy: Always
+      volumes:
+        - name: images
+          persistentVolumeClaim:
+            claimName: images
+        - name: videos
+          persistentVolumeClaim:
+            claimName: videos
+        - name: db
+          persistentVolumeClaim:
+            claimName: db

@@ -1,0 +1,15 @@
+{
+  "name": "manifests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "k8s-controller.js",
+  "scripts": {
+    "start": "node k8s-controller.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@kubernetes/client-node": "^0.19.0",
+    "fastify": "^4.23.2"
+  }
+}

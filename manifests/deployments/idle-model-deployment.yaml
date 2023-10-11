@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: idle-model
+  labels:
+    deployment: idle-model
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: idle-model
+  template:
+    metadata:
+      labels:
+        pod: idle-model
+    spec:
+      containers:
+        - name: idle-model
+          image: 5scontrol/idle_python_server:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5001
+              hostPort: 5001
+              protocol: TCP
+          env:
+            - name: server_url
+              value: 192.168.1.136
+      restartPolicy: Always

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: algorithms-controller
+  labels:
+    deployment: algorithms-controller
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: algorithms-controller
+  template:
+    metadata:
+      labels:
+        pod: algorithms-controller
+    spec:
+      containers:
+        - name: algorithms-controller
+          image: 5scontrol/algorithms-controller:latest
+          imagePullPolicy: Never
+          volumeMounts:
+            - name: images
+              mountPath: /var/www/5scontrol/images
+          ports:
+            - containerPort: 3333
+              hostPort: 3333
+              protocol: TCP
+          env:
+            - name: IDLE_PYTHON
+              value: "True"
+            - name: IP
+              value: 192.168.1.136
+            - name: MIN_MAX_PYTHON
+              value: "True"
+            - name: K8S
+              value: "True"
+            - name: K8S_MASTER_IP
+              value: 192.168.1.115
+      restartPolicy: Always
+      volumes:
+        - name: images
+          persistentVolumeClaim:
+            claimName: images
