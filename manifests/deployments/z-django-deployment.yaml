@@ -41,11 +41,11 @@ spec:
             - name: EMULATE_DB
               value: "True"
             - name: IP
-              value: 192.168.1.136
+              value: 192.168.1.110
             - name: SECRET_KEY
               value: 0123456789abcdef0123456789abcdef
             - name: SERVER_URL
-              value: http://192.168.1.136
+              value: http://192.168.1.110
             - name: LICENSE_ACTIVE
               value: 'True'
             - name: DB_ENGINE

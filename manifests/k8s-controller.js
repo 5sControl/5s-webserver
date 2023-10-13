@@ -13,7 +13,7 @@ const randomInt = () => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 const createPodManifest = (image, name, env) => {
-  env.push({name: 'link_reports',value: 'http://192.168.1.136:80/api/reports/report-with-photos/'});
+  env.push({name: 'link_reports',value: 'http://192.168.1.110:80/api/reports/report-with-photos/'});
   const modifiedName = name.replace(/_/g, '-');
   return {
   apiVersion: 'v1',

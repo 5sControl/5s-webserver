@@ -29,7 +29,7 @@ spec:
             - name: IDLE_PYTHON
               value: "True"
             - name: IP
-              value: 192.168.1.136
+              value: 192.168.1.110
             - name: MIN_MAX_PYTHON
               value: "True"
             - name: K8S
