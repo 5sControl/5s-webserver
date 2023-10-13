@@ -172,12 +172,14 @@ services:
       BACKEND_PORT: 8000
       IP: '192.168.1.110'
   nginx:
-    container_name: webserver
-    image: 5scontrol/webserver
+    container_name: nginx
+    image: nginx:latest
     network_mode: host
     volumes:
+      - ./nginx:/etc/nginx/conf.d
       - /media/server/static/images:/usr/src/app/images
       - /media/server/static/videos:/usr/src/app/videos
+    command: ['nginx', '-g', 'daemon off;']
     depends_on:
       - 5scontrol_front
       - django
