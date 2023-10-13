@@ -134,6 +134,8 @@ services:
       - '3000:3000'
     depends_on:
       - django
+    environment:
+      REACT_APP_NGROK: https://grand-alien-apparently.ngrok-free.app/
   onviffinder:
     image: 5scontrol/onviffinder:latest
     container_name: onvif_finder
