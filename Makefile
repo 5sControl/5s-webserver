@@ -1,5 +1,9 @@
-.PHONY: django front algorithms-controller onvif run pull-all push clear-images
+.PHONY: django front algorithms-controller onvif run pull-all push clear-images webserver
 
+webserver:
+	cd ./nginx/ && git checkout development && git reset --hard origin/development && git pull && sudo docker build -t 5scontrol/webserver${version} . && cd ..
+webserver-build:
+	cd ./nginx/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/webserver${version} . && cd ..
 django:
 	cd ../5sControll-backend-django/ && git checkout development && git reset --hard origin/development && git pull && sudo docker build -t 5scontrol/django${version} . && cd ../server-
 front:
@@ -21,13 +25,15 @@ pull-all:
 	make front
 	make onvif
 	make algorithms-controller
+	make webserver
 pull-all-build:
 	make django-build
 	make front-build
 	make onvif
 	make algorithms-controller-build
+	make webserver-build
 push:
-	sudo docker push 5scontrol/django${version} && sudo docker push 5scontrol/onvif${version} && sudo docker push 5scontrol/algorithms-controller${version} && sudo docker push 5scontrol/5scontrol_front${version}
+	sudo docker push 5scontrol/django${version} && sudo docker push 5scontrol/onvif${version} && sudo docker push 5scontrol/algorithms-controller${version} && sudo docker push 5scontrol/5scontrol_front${version} && sudo docker push 5scontrol/webserver${version}
 clear-images:
 	docker rmi $(docker images -f "dangling=true" -q)
 build:
