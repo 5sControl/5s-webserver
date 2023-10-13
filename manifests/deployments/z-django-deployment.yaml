@@ -34,8 +34,10 @@ spec:
               value: redis-service
             - name: DB_HOST
               value: pgservice
+            - name: DB_PORT
+              value: '5432'
             - name: DEBUG
-              value: "True"
+              value: "False"
             - name: EMULATE_DB
               value: "True"
             - name: IP
@@ -44,6 +46,20 @@ spec:
               value: 0123456789abcdef0123456789abcdef
             - name: SERVER_URL
               value: http://192.168.1.136
+            - name: LICENSE_ACTIVE
+              value: 'True'
+            - name: DB_ENGINE
+              value: 'django.db.backends.postgresql'
+            - name: DB_NAME
+              value: 'fiveScontrol'
+            - name: DB_USER
+              value: 'admin'
+            - name: DB_PASSWORD
+              value: 'just4Taqtile'
+            - name: TEST_DB_NAME
+              value: 'test_database'
+            - name: TEST_DB_PORT
+              value: '5433'
       restartPolicy: Always
       volumes:
         - name: images
