@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /home/server/reps/kubestorage/database
+    path: /home/server/reps/database
   nodeAffinity:
     required:
       nodeSelectorTerms:

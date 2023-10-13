@@ -6,14 +6,14 @@ metadata:
     type: local
 spec:
   capacity:
-    storage: 10Gi
+    storage: 500Gi
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /home/server/reps/kubestorage/images
+    path: /media/server/static/images
   nodeAffinity:
     required:
       nodeSelectorTerms:
