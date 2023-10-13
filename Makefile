@@ -3,7 +3,7 @@
 django:
 	cd ../5sControll-backend-django/ && git checkout development && git reset --hard origin/development && git pull && sudo docker build -t 5scontrol/django${version} . && cd ../server-
 front:
-	cd ../django-front/ && git checkout development && git reset --hard origin/development && git pull && sudo docker build -t 5scontrol/5scontrol_front${version} . && cd ../server-
+	cd ../django-front/ && git checkout development && git reset --hard origin/development && git pull && sudo docker build -t 5scontrol/5scontrol_front${version} .
 django-build:
 	cd ../5sControll-backend-django/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/django${version} . && cd ../server-
 front-build:
