@@ -24,6 +24,6 @@ spec:
               protocol: TCP
           env:
             - name: REACT_APP_NGROK
-              value: https://bluejay-deciding-slug.ngrok-free.app/
+              value: https://grand-alien-apparently.ngrok-free.app/
 
       restartPolicy: Always

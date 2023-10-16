@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: machine-model-js
+  labels:
+    deployment: machine-model-js
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: machine-model-js
+  template:
+    metadata:
+      labels:
+        pod: machine-model-js
+    spec:
+      containers:
+        - name: machine-model-js
+          image: 5scontrol/inference_server_js:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 9999
+              protocol: TCP
+          env:
+            - name: link_reports
+              value: "http://django-service:8000/api/reports/report-with-photos"
+      restartPolicy: Always

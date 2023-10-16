@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: "local-storage"
   local:
-    path: /home/server/reps/server-/nginx/
+    path: /home/server/reps/server-/manifests/nginx/
   nodeAffinity:
     required:
       nodeSelectorTerms:

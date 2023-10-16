@@ -28,8 +28,10 @@ spec:
           env:
             - name: IDLE_PYTHON
               value: "True"
-            - name: IP
-              value: 192.168.1.110
+            - name: ONVIF_SERVICE_URL
+              value: onvif-service
+            - name: DJANGO_SERVICE_URL
+              value: django-service
             - name: MIN_MAX_PYTHON
               value: "True"
             - name: K8S

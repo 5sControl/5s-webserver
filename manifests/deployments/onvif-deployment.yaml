@@ -30,8 +30,8 @@ spec:
               hostPort: 3456
               protocol: TCP
           env:
-            - name: IP
-              value: 192.168.1.110
+            - name: DJANGO_SERVICE_URL
+              value: django-service
       restartPolicy: Always
       volumes:
         - name: images

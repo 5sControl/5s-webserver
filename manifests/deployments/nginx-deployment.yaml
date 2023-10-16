@@ -20,6 +20,10 @@ spec:
           volumeMounts:
             - name: nginx
               mountPath: /etc/nginx/conf.d
+            - name: images
+              mountPath: /usr/src/app/images
+            - name: videos
+              mountPath: /usr/src/app/videos
           ports:
             - containerPort: 80
               hostPort: 80
@@ -29,3 +33,9 @@ spec:
         - name: nginx
           persistentVolumeClaim:
             claimName: nginx
+        - name: images
+          persistentVolumeClaim:
+            claimName: images
+        - name: videos
+          persistentVolumeClaim:
+            claimName: videos

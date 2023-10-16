@@ -13,7 +13,7 @@ const randomInt = () => {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 };
 const createPodManifest = (image, name, env) => {
-  env.push({name: 'link_reports',value: 'http://192.168.1.110:80/api/reports/report-with-photos/'});
+  env.push({name: 'link_reports',value: 'http://django-service:8000/api/reports/report-with-photos/'});
   const modifiedName = name.replace(/_/g, '-');
   return {
   apiVersion: 'v1',
@@ -25,7 +25,7 @@ const createPodManifest = (image, name, env) => {
     containers: [
       {
         name: modifiedName,
-        image: '5scontrol/min_max_python:latest' || image,
+        image: image,
         volumeMounts: [
             {
               name: 'images',
@@ -50,7 +50,7 @@ const createPodManifest = (image, name, env) => {
 fastify.post('/create-pod', async (request, reply) => {
   try {
     console.log('start pod', request.body)
-    const manifest = createPodManifest(request.body.image, request.body.name, request.body.envVariables);
+    const manifest = createPodManifest(request.body.image, request.body.name, request.body.envVars);
     const response = await k8sApi.createNamespacedPod('default', manifest);
     return {name: response.body.metadata.name};
   } catch (err) {

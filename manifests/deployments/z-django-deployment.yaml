@@ -34,18 +34,22 @@ spec:
               value: redis-service
             - name: DB_HOST
               value: pgservice
+            - name: ONVIF_SERVICE_URL
+              value: onvif-service
+            - name: ONVIFFINDER_SERVICE_URL
+              value: onviffinder-service
+            - name: ALGORITHMS_CONTROLLER_SERVICE_URL
+              value: algorithms-controller-service
+            - name: DJANGO_SERVICE_URL
+              value: django-service
             - name: DB_PORT
               value: '5432'
             - name: DEBUG
               value: "False"
             - name: EMULATE_DB
               value: "True"
-            - name: IP
-              value: 192.168.1.110
             - name: SECRET_KEY
               value: 0123456789abcdef0123456789abcdef
-            - name: SERVER_URL
-              value: http://192.168.1.110
             - name: LICENSE_ACTIVE
               value: 'True'
             - name: DB_ENGINE
