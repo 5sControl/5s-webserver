@@ -19,7 +19,7 @@ algorithms-controller-build:
 onvif:
 	cd ../onvif/ && git checkout main && git reset --hard origin/main && git pull && sudo docker build -t 5scontrol/onvif${version} . && cd ../server-
 run:
-	sudo docker-compose down && sudo docker-compose up -d
+	echo
 pull-all:
 	make django
 	make front
