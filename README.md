@@ -113,6 +113,13 @@ You can view all environment variables in the service [repository](https://githu
 
  - `IP: 192.168.1.132` - network ip
 
+### *Tests**
+
+#### **Environment variables**
+
+ - `IP: 192.168.1.132` - network ip
+ - `BACKEND_PORT:8000` - backend port
+
 ### **Frontend**
 
 #### **Environment variables**
