@@ -113,7 +113,7 @@ You can view all environment variables in the service [repository](https://githu
 
  - `IP: 192.168.1.132` - network ip
 
-### *Tests**
+### **Tests**
 
 #### **Environment variables**
 
