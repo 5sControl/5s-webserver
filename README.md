@@ -47,7 +47,7 @@ The connections between the project repositories are illustrated by the followin
 [Installation Guide Pt.2](https://5controls.com/blog/installing-5s-control-software-part-2-docker)
 
 # **Installation**
-To run the application, you need to install Docker and Docker-compose. You can do this by following the instructions specific to your system available at [Docker Installation Guide](https://docs.docker.com/engine/install/) [Docker-compose Installation Guide](https://docs.docker.com/compose/install/).
+To run the application, you need to install Docker and Docker-compose. You can do this by following the instructions specific to your system available at [Docker Installation Guide](https://docs.docker.com/engine/install/) and at [Docker-compose Installation Guide](https://docs.docker.com/compose/install/).
 
 Please follow the link and select the instructions that match your operating system to install Docker.
 
