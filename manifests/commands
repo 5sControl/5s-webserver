@@ -21,3 +21,9 @@ sudo helm install dev-pg bitnami/postgresql --set primary.persistence.existingCl
 
 on slave node:
 sudo mkdir -p /home/server/reps/kubestorage && cd /home/server/reps/kubestorage && sudo mkdir images && sudo mkdir videos && sudo mkdir database && cd database && sudo mkdir pgdata && sudo mkdir nginx
+
+dashboard:
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
+kubectl proxy
+cd system && k apply -f .
+k -n kubernetes-dashboard create token admin-user

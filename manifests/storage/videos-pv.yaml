@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: "local-storage"
   local:
-    path: /media/server/static/videos
+    path: /media/server/Новый том/videos
   nodeAffinity:
     required:
       nodeSelectorTerms:
