@@ -93,7 +93,7 @@ You can view all environment variables in the service [repository](https://githu
 
  - `/home/server/reps/images:/usr/src/app/images` - to save pictures on the device
  - `/home/server/reps/videos:/usr/src/app/videos` to save videos on the device
- - `/home/server/reps/log:/usr/src/app/log` - to save Sqlite Database on device
+ - `/home/server/reps/database:/var/www/5scontrol/database` - to save Sqlite Database on device
 
 ### **Algorithms controller:**
 
