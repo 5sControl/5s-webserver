@@ -38,7 +38,6 @@ The connections between the project repositories are illustrated by the followin
 **Algorithms Servers:**
 1. [inference-server-js]()
 
-
 # **Documentation**
 
 [User Documentation](https://github.com/5sControl/Manufacturing-Automatization-Enterprise/wiki)
@@ -46,6 +45,110 @@ The connections between the project repositories are illustrated by the followin
 [Installation Guide Pt.1](https://5controls.com/blog/installing-5s-control-software)
 
 [Installation Guide Pt.2](https://5controls.com/blog/installing-5s-control-software-part-2-docker)
+
+# **Installation**
+To run the application, you need to install Docker and Docker-compose. You can do this by following the instructions specific to your system available at [Docker Installation Guide](https://docs.docker.com/engine/install/) [Docker-compose Installation Guide](https://docs.docker.com/compose/install/).
+
+Please follow the link and select the instructions that match your operating system to install Docker.
+
+To clone the project, use the following Git command:
+
+```shell
+git@github.com:5sControl/5s-webserver.git
+```
+
+## **Docker-compose**
+
+### **Django:**
+
+#### **Environment variables**
+
+You can view all environment variables in the service [repository](https://github.com/5sControl/5s-backend).
+
+#### **Volumes**
+
+ - `/home/server/reps/images:/usr/src/app/images` - to access platform images
+ - `/home/server/reps/videos:/usr/src/app/videos` to access platform videos
+ - `/home/server/reps/log:/usr/src/app/log` - to access django logs
+
+**DB:**
+
+#### **Environment variables**
+
+ - `POSTGRES_USER: user` - Database user
+ - `POSTGRES_PASSWORD: pass` - Database password
+ - `POSTGRES_DB: db` - Database name
+
+#### **Volumes**
+
+ - `/home/server/reps/database/pgdata:/var/lib/postgresql/data/` - to save the database on device
+
+### **Onvif:**
+
+#### **Environment variables**
+
+You can view all environment variables in the service [repository](https://github.com/5sControl/5s-onvif).
+
+#### **Volumes**
+
+ - `/home/server/reps/images:/usr/src/app/images` - to save pictures on the device
+ - `/home/server/reps/videos:/usr/src/app/videos` to save videos on the device
+ - `/home/server/reps/log:/usr/src/app/log` - to save Sqlite Database on device
+
+### **Algorithms controller:**
+
+#### **Environment variables**
+
+You can view all environment variables in the service [repository](https://github.com/5sControl/5s-algorithms-controller).
+
+#### **Volumes**
+ - `/home/server/reps/images:/var/www/5scontrol/images` - to save report pictures on the device
+ - `/home/server/reps/database/dataset:/var/www/5scontrol/dataset` - to save dataset on the device
+ - `/home/server/reps/images/debug:/var/www/5scontrol/debug` - to save debug pictures on the device
+ - `/var/run/docker.sock:/var/run/docker.sock` - to access your docker driver
+
+### **Onvif finder**
+
+#### **Environment variables**
+
+ - `IP: 192.168.1.132` - network ip
+
+### **Frontend**
+
+#### **Environment variables**
+
+ - `REACT_APP_NGROK: https://example.com` - domain link
+
+### **NGINX**
+
+#### **Volumes**
+
+ - `/home/server/reps/images:/usr/src/app/images` - to access pictures
+ - `/home/server/reps/videos:/usr/src/app/videos` to access videos
+
+### **Algorithm Models (Min_Max, Idle, Machine_control)**
+
+#### **Environment variables**
+
+ - `server_url: 192.168.1.142` - network ip
+
+##### **Machine_control_JS**
+
+- `link_reports: http://${network ip}:8000/api/reports/report-with-photos/` - link to send reports to the backend
+
+#### **Resources**
+
+To change the maximum model memory you need to change the resource parameter
+
+![image](https://github.com/5sControl/5s-webserver/assets/57481641/20bb6a92-b644-4ae1-9b70-7e4fd2b6e813)
+
+**Running the Application:**
+
+For start, use the following command: 
+ ```shell
+ cd release
+ docker-compose up
+```
 
 # **Contributing**
 Thank you for considering contributing to 5controlS. We truly believe that we can build an outstanding product together!
