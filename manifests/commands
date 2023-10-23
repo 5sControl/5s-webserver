@@ -1,6 +1,7 @@
 master node:
 sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --cri-socket unix:///var/run/cri-dockerd.sock
 sudo kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+sudo kubectl apply -f https://raw.githubusercontent.com/pythianarora/total-practice/master/sample-kubernetes-code/metrics-server.yaml
 https://github.com/coredns/helm#tldr
 chmod 777 /etc/kubernetes/admin.conf
 sudo kubeadm reset --cri-socket unix:///var/run/cri-dockerd.sock
@@ -27,3 +28,16 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/a
 kubectl proxy
 cd system && k apply -f .
 k -n kubernetes-dashboard create token admin-user
+or longlived key:
+kubectl get secret admin-user -n kubernetes-dashboard -o jsonpath={".data.token"} | base64 -d
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=default
+
+
+
+
+
+
+надо ли?
+
+kubectl apply -f https://raw.githubusercontent.com/pythianarora/total-practice/master/sample-kubernetes-code/metrics-server.yaml
+

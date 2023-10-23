@@ -33,6 +33,8 @@ spec:
           env:
             - name: DJANGO_SERVICE_URL
               value: "localhost"
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always
       volumes:
         - name: images

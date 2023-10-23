@@ -38,6 +38,8 @@ spec:
               value: "True"
             - name: K8S_MASTER_IP
               value: 192.168.1.115
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always
       volumes:
         - name: images

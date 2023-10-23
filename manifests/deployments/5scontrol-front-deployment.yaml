@@ -25,5 +25,6 @@ spec:
           env:
             - name: REACT_APP_NGROK
               value: https://grand-alien-apparently.ngrok-free.app/
-
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always

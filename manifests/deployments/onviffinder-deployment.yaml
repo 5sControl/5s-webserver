@@ -22,4 +22,6 @@ spec:
             - containerPort: 7654
               hostPort: 7654
               protocol: TCP
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always

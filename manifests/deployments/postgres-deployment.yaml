@@ -31,6 +31,8 @@ spec:
               value: just4Taqtile
             - name: POSTGRES_USER
               value: admin
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always
       volumes:
         - name: pg

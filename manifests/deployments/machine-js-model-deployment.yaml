@@ -24,4 +24,12 @@ spec:
           env:
             - name: link_reports
               value: "http://django-service:8000/api/reports/report-with-photos"
+            - name: server_url
+              value: "http://192.168.1.110"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 4Gi
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always

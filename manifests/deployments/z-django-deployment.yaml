@@ -64,6 +64,8 @@ spec:
               value: 'test_database'
             - name: TEST_DB_PORT
               value: '5433'
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always
       volumes:
         - name: images

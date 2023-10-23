@@ -19,3 +19,5 @@ spec:
         image: redis
         ports:
         - containerPort: 6379
+      nodeSelector:
+        specialnode: "main"

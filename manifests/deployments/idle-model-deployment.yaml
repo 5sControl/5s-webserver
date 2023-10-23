@@ -25,4 +25,8 @@ spec:
           env:
             - name: server_url
               value: idle-model
+          resources:
+            requests:
+              cpu: 100m
+              memory: 5Gi
       restartPolicy: Always

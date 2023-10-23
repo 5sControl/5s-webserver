@@ -25,4 +25,10 @@ spec:
           env:
             - name: server_url
               value: min-max-model
+          resources:
+            requests:
+              cpu: 100m
+              memory: 4Gi
+      nodeSelector:
+        specialnode: "main"
       restartPolicy: Always
