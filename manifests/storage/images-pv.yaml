@@ -13,7 +13,7 @@ spec:
   persistentVolumeReclaimPolicy: Retain
   storageClassName: local-storage
   local:
-    path: /media/server/4e3845c8-1407-4be8-bc9b-95687abee6a8/images
+    path: /media/big/images
   nodeAffinity:
     required:
       nodeSelectorTerms:
