@@ -47,6 +47,20 @@ const createPodManifest = (image, name, env) => {
 };
 }
 
+const restartPod = async (podName) => {
+  try {
+    const res = await k8sApi.readNamespacedPod(podName, 'default');
+    console.log(res.body, 'bbbbody')
+    let deployment = res.body;
+
+    // replace
+    const rrr = await k8sApi.replaceNamespacedPod(podName, 'default', deployment);
+  } catch (err) {
+    console.error(`Ошибка при перезапуске пода "${podName}": ${err}`);
+  }
+};
+
+
 fastify.post('/create-pod', async (request, reply) => {
   try {
     console.log('start pod', request.body)
@@ -56,6 +70,17 @@ fastify.post('/create-pod', async (request, reply) => {
   } catch (err) {
     console.error('Ошибка при создании Pod:', err);
     return `Ошибка при создании Pod: ${err.message}`;
+  }
+});
+
+fastify.post('/reload-pod', async (request, reply) => {
+  try {
+    console.log(request.body.podName, 'request.body.podName')
+    const response = await restartPod(request.body.podName);
+    return 'Pod reloaded';
+  } catch (err) {
+    console.log(err, 'err reload pod')
+    return `reload pod error`;
   }
 });
 

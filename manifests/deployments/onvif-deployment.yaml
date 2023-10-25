@@ -18,7 +18,7 @@ spec:
       containers:
         - name: onvif
           image: 5scontrol/onvif:latest
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           volumeMounts:
             - name: images
               mountPath: /var/www/5scontrol/images

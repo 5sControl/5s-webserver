@@ -17,7 +17,7 @@ spec:
       containers:
         - name: django
           image: 5scontrol/django:latest
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           volumeMounts:
             - name: images
               mountPath: /usr/src/app/images
@@ -64,6 +64,8 @@ spec:
               value: 'test_database'
             - name: TEST_DB_PORT
               value: '5433'
+            - name: NGROK_URL
+              value: https://grand-alien-apparently.ngrok-free.app/
       nodeSelector:
         specialnode: "main"
       restartPolicy: Always

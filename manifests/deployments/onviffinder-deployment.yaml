@@ -18,6 +18,7 @@ spec:
       containers:
         - name: onviffinder
           image: 5scontrol/onviffinder:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 7654
               hostPort: 7654

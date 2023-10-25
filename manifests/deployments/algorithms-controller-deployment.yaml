@@ -17,7 +17,7 @@ spec:
       containers:
         - name: algorithms-controller
           image: 5scontrol/algorithms-controller:latest
-          imagePullPolicy: Never
+          imagePullPolicy: Always
           volumeMounts:
             - name: images
               mountPath: /var/www/5scontrol/images
