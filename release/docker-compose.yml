@@ -15,7 +15,7 @@ services:
       DB_ENGINE: 'django.db.backends.postgresql'
       DB_NAME: 'fiveScontrol'
       DB_USER: 'admin'
-      DB_PASSWORD: 'just4Taqtile'
+      DB_PASSWORD: 'password'
       DB_HOST: 'localhost'
       DB_PORT: '5432'
       TEST_DB_NAME: 'test_database'
@@ -32,7 +32,7 @@ services:
     container_name: db
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: just4Taqtile
+      POSTGRES_PASSWORD: password
       POSTGRES_DB: fiveScontrol
     ports:
       - '5432:5432'
