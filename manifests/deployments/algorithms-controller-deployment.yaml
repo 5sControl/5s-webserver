@@ -13,6 +13,8 @@ spec:
     metadata:
       labels:
         pod: algorithms-controller
+      annotations:
+        custom-label: '102424483666'
     spec:
       containers:
         - name: algorithms-controller
@@ -27,19 +29,19 @@ spec:
               protocol: TCP
           env:
             - name: IDLE_PYTHON
-              value: "True"
+              value: 'True'
             - name: ONVIF_SERVICE_URL
               value: onvif-service
             - name: DJANGO_SERVICE_URL
               value: django-service
             - name: MIN_MAX_PYTHON
-              value: "True"
+              value: 'True'
             - name: K8S
-              value: "True"
+              value: 'True'
             - name: K8S_MASTER_IP
               value: 192.168.1.115
       nodeSelector:
-        specialnode: "main"
+        specialnode: main
       restartPolicy: Always
       volumes:
         - name: images

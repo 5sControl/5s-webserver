@@ -1,8 +1,9 @@
 const fastify = require('fastify')();
-
 const k8s = require('@kubernetes/client-node');
 const kc = new k8s.KubeConfig();
 kc.loadFromDefault();
+
+const {reload} = require('./k8s-commands');
 
 const k8sApi = kc.makeApiClient(k8s.CoreV1Api);
 
@@ -47,18 +48,22 @@ const createPodManifest = (image, name, env) => {
 };
 }
 
-const restartPod = async (podName) => {
-  try {
-    const res = await k8sApi.readNamespacedPod(podName, 'default');
-    console.log(res.body, 'bbbbody')
-    let deployment = res.body;
 
-    // replace
-    const rrr = await k8sApi.replaceNamespacedPod(podName, 'default', deployment);
-  } catch (err) {
-    console.error(`Ошибка при перезапуске пода "${podName}": ${err}`);
+const modifyPodAnnotation = (yamlFilePath) => {
+  try {
+    const fileContents = fs.readFileSync(yamlFilePath, 'utf8');
+
+    const yamlObject = yaml.load(fileContents);
+    if (yamlObject?.spec?.template?.metadata?.annotations?.["custom-label"]) {
+      yamlObject.spec.template.metadata.annotations["custom-label"] = randomInt().toString();
+    }
+
+    const updatedYaml = yaml.dump(yamlObject);
+    fs.writeFileSync(yamlFilePath, updatedYaml, 'utf8');
+  } catch (e) {
+    console.error('Error:', e);
   }
-};
+}
 
 
 fastify.post('/create-pod', async (request, reply) => {
@@ -73,10 +78,13 @@ fastify.post('/create-pod', async (request, reply) => {
   }
 });
 
-fastify.post('/reload-pod', async (request, reply) => {
+fastify.get('/deploy-pod', async (request, reply) => {
   try {
-    console.log(request.body.podName, 'request.body.podName')
-    const response = await restartPod(request.body.podName);
+    if (!request.query?.service) {
+      return 'service query param not found'
+    }
+    const response = await reload(request.query.service);
+    if (!response) return `Pod not reloaded`
     return 'Pod reloaded';
   } catch (err) {
     console.log(err, 'err reload pod')
