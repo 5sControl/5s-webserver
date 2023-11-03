@@ -18,12 +18,15 @@ spec:
         - name: machine-model-js
           image: 5scontrol/inference_server_js:latest
           imagePullPolicy: Always
+          volumeMounts:
+            - name: images
+              mountPath: /var/www/5scontrol/images
           ports:
             - containerPort: 9999
               protocol: TCP
           env:
             - name: link_reports
-              value: "http://django-service:8000/api/reports/report-with-photos"
+              value: "http://django-service:8000/api/reports/report-with-photos/"
             - name: server_url
               value: "192.168.1.110"
           resources:
@@ -33,3 +36,7 @@ spec:
       nodeSelector:
         specialnode: "main"
       restartPolicy: Always
+      volumes:
+        - name: images
+          persistentVolumeClaim:
+            claimName: images
