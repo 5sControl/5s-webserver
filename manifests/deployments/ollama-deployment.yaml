@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ollama
+  labels:
+    deployment: ollama
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: ollama
+  template:
+    metadata:
+      labels:
+        pod: ollama
+    spec:
+      containers:
+        - name: ollama
+          image: ollama/ollama
+          resources:
+            limits:
+              nvidia.com/gpu: '1'
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 11434
+              hostPort: 11434
+              protocol: TCP
+          env:
+            - name: REDIS_HOST
+              value: redis-service
+      nodeSelector:
+        specialnode: "main"
+      restartPolicy: Always

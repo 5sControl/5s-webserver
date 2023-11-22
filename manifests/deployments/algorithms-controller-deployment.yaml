@@ -23,6 +23,8 @@ spec:
           volumeMounts:
             - name: images
               mountPath: /var/www/5scontrol/images
+            - name: docker
+              mountPath: /var/run
           ports:
             - containerPort: 3333
               hostPort: 3333
@@ -47,3 +49,6 @@ spec:
         - name: images
           persistentVolumeClaim:
             claimName: images
+        - name: docker
+          persistentVolumeClaim:
+            claimName: docker
