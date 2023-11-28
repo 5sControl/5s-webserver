@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chat
+  labels:
+    deployment: chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      pod: chat
+  template:
+    metadata:
+      labels:
+        pod: chat
+    spec:
+      containers:
+        - name: chat
+          image: 5scontrol/chat-guru-api:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3002
+              hostPort: 3002
+              protocol: TCP
+      nodeSelector:
+        specialnode: "main"
+      restartPolicy: Always
