@@ -24,7 +24,7 @@ spec:
               protocol: TCP
           env:
             - name: REACT_APP_NGROK
-              value: https://grand-alien-apparently.ngrok-free.app/
+              value: https://evolved-moccasin-secondly.ngrok-free.app/
       nodeSelector:
         specialnode: "main"
       restartPolicy: Always
