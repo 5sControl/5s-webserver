@@ -2,171 +2,199 @@ version: '3'
 services:
   django:
     restart: always
-    image: 5scontrol/django:v0.5.4
+    image: 5scontrol/django:v0.5.5
     container_name: django
     environment:
       SECRET_KEY: '0123456789abcdef0123456789abcdef'
-      DEBUG: 'True'
-      SERVER_URL: 'http://192.168.1.110'
-      IP: '192.168.1.110'
-      PRODUCTION: 'True'
-      EMULATE_DB: 'False'
+      SERVER_URL: 'http://host.docker.internal'
+      DEBUG: 'False'
       LICENSE_ACTIVE: 'True'
       DB_ENGINE: 'django.db.backends.postgresql'
       DB_NAME: 'fiveScontrol'
       DB_USER: 'admin'
-      DB_PASSWORD: 'password'
-      DB_HOST: 'localhost'
+      DB_PASSWORD: 'just4Taqtile'
+      DB_HOST: db
       DB_PORT: '5432'
+      ONVIF_SERVICE_URL: onvif
+      ONVIFFINDER_SERVICE_URL: host.docker.internal
+      REDIS_HOST: redis
+      ALGORITHMS_CONTROLLER_SERVICE_URL: algorithms-controller
+      DJANGO_SERVICE_URL: django
+      EMULATE_DB: 'True'
+      NGROK_URL: 'http://localhost:80/'
       TEST_DB_NAME: 'test_database'
       TEST_DB_PORT: '5433'
+    ports:
+      - '8000:8000'
     tty: true
-    network_mode: host
     volumes:
-      - /home/server/reps/images:/usr/src/app/images
-      - /home/server/reps/videos:/usr/src/app/videos
+      - /media/server/static/images:/usr/src/app/images
+      - /media/server/static/videos:/usr/src/app/videos
       - /home/server/reps/database:/usr/src/app/database
       - /home/server/reps/log:/usr/src/app/log
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
+    networks:
+      - 5scontrol
   db:
     image: postgres:15
     container_name: db
     environment:
       POSTGRES_USER: admin
-      POSTGRES_PASSWORD: password
+      POSTGRES_PASSWORD: just4Taqtile
       POSTGRES_DB: fiveScontrol
     ports:
       - '5432:5432'
     volumes:
       - /home/server/reps/database/pgdata:/var/lib/postgresql/data/
+    networks:
+      - 5scontrol
   onvif:
     restart: always
-    image: 5scontrol/onvif:v0.5.4
+    image: 5scontrol/onvif:v0.5.5
     container_name: onvif
+    ports:
+      - 3456:3456
     environment:
-      IP: '192.168.1.110'
+      DJANGO_SERVICE_URL: 'django'
     volumes:
-      - /home/server/reps/images:/var/www/5scontrol/images
-      - /home/server/reps/videos:/var/www/5scontrol/videos
+      - /media/server/static/images:/var/www/5scontrol/images
+      - /media/server/static/videos:/var/www/5scontrol/videos
       - /home/server/reps/database:/var/www/5scontrol/database
     depends_on:
       - django
     tty: true
-    network_mode: host
+    networks:
+      - 5scontrol
   algorithms-controller:
     restart: always
-    image: 5scontrol/algorithms-controller:v0.5.4
+    image: 5scontrol/algorithms-controller:v0.5.5
     privileged: true
+    build: .
     container_name: algorithms-controller
     tty: true
-    network_mode: host
+    ports:
+      - '3333:3333'
     environment:
-      IP: '192.168.1.110'
       MIN_MAX_PYTHON: 'True'
       IDLE_PYTHON: 'True'
-      ALGORITMS_SOURCE_IMAGES_DIST: '/home/server/reps/images'
-      ALGORITMS_SOURCE_DEBUG_DIST: '/home/server/reps/images/debug'
-      ALGORITMS_TARGET_IMAGES_DIST: '/home/server/reps/images'
+      ALGORITMS_SOURCE_IMAGES_DIST: '/media/server/static/images'
+      ALGORITMS_SOURCE_DEBUG_DIST: '/media/server/static/debug'
+      ALGORITMS_TARGET_IMAGES_DIST: '/var/www/5scontrol/images'
       ALGORITMS_TARGET_DEBUG_DIST: '/var/www/5scontrol/debug'
+      ONVIF_SERVICE_URL: onvif
+      DJANGO_SERVICE_URL: django
+      NETWORK: 5scontrol
     depends_on:
       - django
     volumes:
-      - /home/server/reps/images:/var/www/5scontrol/images
+      - /media/server/static/images:/var/www/5scontrol/images
       - /home/server/reps/database/dataset:/var/www/5scontrol/dataset
-      - /home/server/reps/images/debug:/var/www/5scontrol/debug
+      - /media/server/static/debug:/var/www/5scontrol/debug
       - /var/run/docker.sock:/var/run/docker.sock
     stdin_open: true
+    networks:
+      - 5scontrol
   min_max_model:
     restart: always
     image: 5scontrol/min_max_python-server:v0.6.0
     container_name: min_max_model
     tty: true
-    network_mode: host
-    environment:
-      server_url: '192.168.1.184'
-    deploy:
-      resources:
-        limits:
-          memory: 3000M
-  machine_model:
-    restart: always
-    image: 5scontrol/machine_control_python_model_server:v1.0.5
-    container_name: machine_model
-    tty: true
-    network_mode: host
-    environment:
-      server_url: '192.168.1.110'
-    deploy:
-      resources:
-        limits:
-          memory: 3000M
-  machine_js_model:
-    restart: always
-    image: 5scontrol/inference_server_js:v0.5.0
-    container_name: machine_js_model
-    tty: true
-    network_mode: host
-    environment:
-      server_url: '192.168.1.110'
-      link_reports: 'http://192.168.1.110:8000/api/reports/report-with-photos/'
-    deploy:
-      resources:
-        limits:
-          memory: 3000M
-    volumes:
-      - /home/server/reps/images:/var/www/5scontrol/images
-  idle_model:
-    restart: always
-    image: 5scontrol/idle_python_server:v0.5.2
-    container_name: idle_model
-    tty: true
-    network_mode: host
-    environment:
-      server_url: '192.168.1.110'
     deploy:
       resources:
         limits:
           memory: 4000M
+    ports:
+      - '5000:5000'
+    networks:
+      - 5scontrol
   5scontrol_front:
     restart: always
-    image: 5scontrol/5scontrol_front:v0.5.4
+    image: 5scontrol/5scontrol_front:v0.5.5
     container_name: 5scontrol_front
     ports:
       - '3000:3000'
     depends_on:
       - django
     environment:
-      REACT_APP_NGROK: https://example.com/
+      REACT_APP_NGROK: 'http://localhost:80/'
+    networks:
+      - 5scontrol
+  machine_model:
+    restart: always
+    image: 5scontrol/machine_control_python_model_server:v1.0.5
+    container_name: machine_model
+    tty: true
+    deploy:
+      resources:
+        limits:
+          memory: 4000M
+    ports:
+      - '5002:5002'
+    networks:
+      - 5scontrol
+  machine_js_model:
+    restart: always
+    image: 5scontrol/inference_server_js:v0.5.0
+    container_name: machine_js_model
+    tty: true
+    environment:
+      link_reports: 'http://django:8000/api/reports/report-with-photos/'
+    deploy:
+      resources:
+        limits:
+          memory: 4000M
+    ports:
+      - '9999:9999'
+    volumes:
+      - /media/server/static/images:/var/www/5scontrol/images
+      - /media/server/static/debug:/var/www/5scontrol/debug
+    networks:
+      - 5scontrol
+  idle_model:
+    restart: always
+    image: 5scontrol/idle_python_server:v0.5.2
+    container_name: idle_model
+    tty: true
+    ports:
+      - '5001:5001'
+    deploy:
+      resources:
+        limits:
+          memory: 8000M
+    networks:
+      - 5scontrol
   onviffinder:
     image: 5scontrol/onviffinder:latest
     container_name: onvif_finder
-    network_mode: host
     tty: true
-    environment:
-      IP: '192.168.1.110'
+    network_mode: 'host'
   redis:
     image: redis
-    container_name: redis
+    container_name: redis-service
     command: redis-server --maxmemory-policy volatile-ttl
     ports:
       - '6379:6379'
     sysctls:
       - net.core.somaxconn=250
-  tests:
-    restart: always
-    image: 5scontrol/tests:latest
-    container_name: tests
-    ports:
-      - '7000:7000'
-    environment:
-      BACKEND_PORT: 8000
-      IP: '192.168.1.110'
+    networks:
+      - 5scontrol
   nginx:
     container_name: webserver
-    image: 5scontrol/webserver:v0.5.4
-    network_mode: host
+    image: nginx:latest
+    command: ['nginx', '-g', 'daemon off;']
+    ports:
+      - '80:80'
     volumes:
-      - /home/server/reps/images:/usr/src/app/images
-      - /home/server/reps/videos:/usr/src/app/videos
+      - /media/server/static/images:/usr/src/app/images
+      - /media/server/static/videos:/usr/src/app/videos
+      - ../nginx/:/etc/nginx/conf.d
     depends_on:
       - 5scontrol_front
       - django
+    networks:
+      - 5scontrol
+
+networks:
+  5scontrol:
+    name: '5scontrol'
