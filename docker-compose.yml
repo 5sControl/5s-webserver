@@ -24,6 +24,8 @@ services:
       NGROK_URL: 'http://localhost:80/'
       TEST_DB_NAME: 'test_database'
       TEST_DB_PORT: '5433'
+      CORS_ORIGIN_WHITELIST: 'http://localhost:3000'
+      CSRF_TRUSTED_ORIGINS: 'http://localhost:3000'
     ports:
       - '8000:8000'
     tty: true
